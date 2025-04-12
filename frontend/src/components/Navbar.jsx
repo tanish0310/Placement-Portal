@@ -1,16 +1,28 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../styles.css";
 
 const Navbar = () => {
   return (
-    <nav className="bg-blue-600 p-4 text-white flex justify-between">
-      <h1 className="text-xl font-bold">Placement Portal</h1>
-      <ul className="flex gap-4">
-        <li>Home</li>
-        <li>Jobs</li>
-        <li>Companies</li>
-        <li>Contact</li>
-      </ul>
+    <nav className="navbar">
+      <div className="logo">Placement Portal</div>
+      <div className="nav-links">
+        <Link className="nav-link" to="/">
+          Home
+        </Link>
+        <Link className="nav-link" to="/about">
+          About Us
+        </Link>
+        <Link className="nav-link" to="/contact">
+          Contact Us
+        </Link>
+        <Link className="nav-link" to="/login">
+          Login
+        </Link>
+        <Link className="nav-link" to="/signup">
+          Signup
+        </Link>
+      </div>
     </nav>
   );
 };

@@ -13,6 +13,7 @@ const Login = () => {
       >
         <div className="form-container">
           <h2>Login As</h2>
+          <button onClick={() => setUserType("Admin")}>Admin</button>
           <button onClick={() => setUserType("student")}>Student</button>
           <button onClick={() => setUserType("company")}>Company</button>
         </div>

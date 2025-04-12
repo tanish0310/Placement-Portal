@@ -39,6 +39,7 @@ def student_signup(request):
         serializer.save()
         return Response({"message": "Student registered successfully"}, status=status.HTTP_201_CREATED)
     else:
+        print("Serializer errors:", serializer.errors)  # ✅ Keep this line
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # For testing if server is up

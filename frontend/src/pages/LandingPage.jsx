@@ -9,8 +9,8 @@ function LandingPage() {
       className="landing-wrapper"
       style={{ backgroundImage: `url(${bgImage})` }}
     >
-      <nav className="navbar">
-        <div className="logo">Placement Pulse</div>
+      {/* <nav className="navbar">
+        <div className="logo">Placement Portal</div>
         <div className="nav-links">
           <Link className="nav-link" to="/about">
             About Us
@@ -25,7 +25,7 @@ function LandingPage() {
             Signup
           </Link>
         </div>
-      </nav>
+      </nav> */}
       <div className="landing-overlay">
         <div className="content-box">
           <h1 className="heading">Welcome to the Placement Portal</h1>

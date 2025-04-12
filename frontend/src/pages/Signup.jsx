@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../App.css";
 import bgImage from "../assets/IIIT_allh.jpg";
 import { signupStudent, signupCompany } from "../api/user";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
 
 const Signup = () => {
   const [userType, setUserType] = useState("");
@@ -16,6 +17,7 @@ const Signup = () => {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -53,6 +55,13 @@ const Signup = () => {
       console.log("Signup success:", result);
       setSuccess("Signup successful!");
       setError(null);
+
+      // After successful signup, navigate to the student dashboard
+      if (userType === "student") {
+        navigate("/student/dashboard"); // Redirect to student dashboard
+      } else {
+        navigate("/company-dashboard"); // Redirect to company dashboard if needed
+      }
     } catch (err) {
       console.error("Signup error:", err.response?.data || err.message);
       setError("Signup failed.");

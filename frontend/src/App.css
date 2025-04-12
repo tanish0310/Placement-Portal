@@ -148,6 +148,10 @@ button:hover {
   color: white;
 }
 
+.dashboard-container h1 {
+  color: #2c3e50;
+}
+
 .heading {
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -156,4 +160,32 @@ button:hover {
 .subheading {
   font-size: 1.25rem;
   color: #ccc;
+}
+
+.dashboard-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.profile-section, .jobs-section, .applied-jobs-section {
+  background: #5b974c;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0px 1px 8px rgba(0,0,0,0.1);
+}
+
+.job-card {
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.dashboard-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
 }
