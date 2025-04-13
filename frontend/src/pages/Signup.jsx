@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../App.css";
 import bgImage from "../assets/IIIT_allh.jpg";
 import { signupStudent, signupCompany } from "../api/user";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [userType, setUserType] = useState("");
@@ -17,11 +17,10 @@ const Signup = () => {
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setProfilePic(file);
+    setProfilePic(e.target.files[0]);
   };
 
   const handleChange = (e) => {
@@ -52,23 +51,26 @@ const Signup = () => {
       } else {
         result = await signupCompany(data);
       }
+
       console.log("Signup success:", result);
-      setSuccess("Signup successful!");
+      setSuccess(result.message || "Signup successful!"); // ✅ Show message from backend
       setError(null);
 
-      // After successful signup, navigate to the student dashboard
+      // After successful signup, navigate to the dashboard
       if (userType === "student") {
-        navigate("/student/dashboard"); // Redirect to student dashboard
+        navigate("/student/StudentDashboard");
       } else {
-        navigate("/company-dashboard"); // Redirect to company dashboard if needed
+        navigate("/");
       }
     } catch (err) {
-      console.error("Signup error:", err.response?.data || err.message);
-      setError("Signup failed.");
+      console.error("Signup error:", err);
+      setError(err.detail || "Signup failed."); // ✅ Use fallback message
       setSuccess(null);
     }
   };
 
+
+  // Choose user type
   if (!userType) {
     return (
       <div
