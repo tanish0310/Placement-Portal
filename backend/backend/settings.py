@@ -125,6 +125,6 @@ REST_FRAMEWORK = {
     ]
 }
 AUTHENTICATION_BACKENDS = [
-    'accounts.authentication_backends.StudentAuthenticationBackend',  # Add your custom backend
-    'django.contrib.auth.backends.ModelBackend',  # Retain the default backend for other uses
+    'yourapp.authentication_backends.CustomAuthenticationBackend',  # Add the custom backend
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
 ]
