@@ -16,7 +16,7 @@
   padding: 2rem;
   background: rgb(25, 22, 60);
   color: #ffffff;
-  width: 100%; /* This ensures full width */
+  width: 100vw; /* This ensures full width */
   overflow: hidden; /* Hide anything that might overflow */
 }
 
