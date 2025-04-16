@@ -9,8 +9,8 @@ import StudentDashboard from "./pages/student/StudentDashboard";
 import Navbar from "./components/Navbar";
 import CompanyDashboard from "./pages/company/CompanyDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-// import UpdateProfile from "./pages/student/UpdateProfile"; // Added import
-// import ChangePassword from "./pages/student/ChangePassword"; // Added import
+import PostJob from "./pages/company/PostJob";
+
 
 function App() {
   return (
@@ -30,10 +30,10 @@ function App() {
           path="/company/CompanyDashboard"
           element={<CompanyDashboard />}
         />
-        <Route
-          path="/admin/AdminDashboard"
-          element={<AdminDashboard />}
-        />
+        <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/company/PostJob" element={<PostJob />} />
         {/* <Route path="/student/update-profile" element={<UpdateProfile />} />
         <Route path="/student/change-password" element={<ChangePassword />} /> */}
       </Routes>

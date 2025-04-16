@@ -45,7 +45,7 @@ const Login = () => {
   }
 
   return (
-    <div className="center-page">
+    <div className="center-page" style={{ backgroundImage: `url(${bgImage})` }}>
       <div className="form-container">
         <h2>{userType.charAt(0).toUpperCase() + userType.slice(1)} Login</h2>
         <form onSubmit={handleLogin}>
