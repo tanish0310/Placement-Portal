@@ -9,6 +9,7 @@
     "ajv": "^6.12.6",
     "ansi-styles": "^4.3.0",
     "argparse": "^2.0.1",
+    "axios": "^1.8.4",
     "balanced-match": "^1.0.2",
     "brace-expansion": "^1.1.11",
     "browserslist": "^4.24.4",
