@@ -60,7 +60,7 @@ const Signup = () => {
       if (userType === "student") {
         navigate("/student/StudentDashboard");
       } else {
-        navigate("/");
+        navigate("/company/CompanyDashboard");
       }
     } catch (err) {
       console.error("Signup error:", err);

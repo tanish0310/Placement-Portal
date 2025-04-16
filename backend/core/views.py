@@ -6,22 +6,25 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password
 from .models import Student
-from .serializers import StudentSerializer
 from .models import Company
-from .serializers import CompanySerializer
-from django.contrib.auth import authenticate
+
+
 from .serializers import LoginSerializer
+from .serializers import StudentSerializer, CompanySerializer
+
+
+
 
 
 @api_view(['POST'])
 def student_signup(request):
-    # Extract required fields only
     student_data = {
         'name': request.data.get('name'),
         'email': request.data.get('email'),
-        'password': request.data.get('password'),
+        'password': make_password(request.data.get('password')),  # ✅ hash the password here
         'cgpa': request.data.get('cgpa'),
         'branch': request.data.get('branch'),
         'year': request.data.get('year'),
@@ -37,13 +40,12 @@ def student_signup(request):
         print("Serializer errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 @api_view(['POST'])
 def company_signup(request):
     company_data = {
         'name': request.data.get('name'),
         'email': request.data.get('email'),
-        'password': request.data.get('password'),
+        'password': make_password(request.data.get('password')),
     }
 
     serializer = CompanySerializer(data=company_data)
@@ -55,39 +57,44 @@ def company_signup(request):
         print("Serializer errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
+
 @api_view(['POST'])
 def student_login(request):
-    if request.method == 'POST':
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            password = serializer.validated_data['password']
-            user = authenticate(email=email, password=password)
-            
-            if user and isinstance(user, Student):  # Check if the user is a student
-                # Here you can create a token, session, or perform any other logic
-                # For example, using Token Authentication:
-                # token = Token.objects.create(user=user)  # if you are using TokenAuthentication
-                return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+
+        try:
+            student = Student.objects.get(email=email)
+            if check_password(password, student.password):
+                 student_data = StudentSerializer(student).data
+                 return Response(student_data, status=status.HTTP_200_OK)
             else:
-                return Response({"detail": "Invalid credentials or not a student"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"detail": "Incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
+        except Student.DoesNotExist:
+            return Response({"detail": "Student does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def company_login(request):
-    if request.method == 'POST':
-        serializer = LoginSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            password = serializer.validated_data['password']
-            user = authenticate(email=email, password=password)
-            
-            if user and isinstance(user, Company):  # Check if the user is a company
-                # Here you can create a token, session, or perform any other logic
-                return Response({"message": "Login successful"}, status=status.HTTP_200_OK)
-            else:
-                return Response({"detail": "Invalid credentials or not a company"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
 
+        try:
+            company = Company.objects.get(email=email)
+            if check_password(password, company.password):
+                company_data = CompanySerializer(company).data
+                return Response(company_data, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company not found"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

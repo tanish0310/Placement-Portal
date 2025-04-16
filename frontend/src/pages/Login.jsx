@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../App.css";
 import bgImage from "../assets/IIIT_allh.jpg";
-import { loginStudent, loginCompany } from "../api/user"; // Assuming your login functions are in the 'auth.js' file
+import { loginStudent, loginCompany } from "../api/user";
 
 const Login = () => {
   const [userType, setUserType] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate(); // navigation hook
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -15,15 +17,16 @@ const Login = () => {
 
     try {
       let response;
+
       if (userType === "student") {
         response = await loginStudent(formData);
+        localStorage.setItem("student", JSON.stringify(response));
+        navigate("/student/StudentDashboard"); // redirect to student dashboard
       } else if (userType === "company") {
         response = await loginCompany(formData);
+        localStorage.setItem("company", JSON.stringify(response));
+        navigate("/company/CompanyDashboard"); // redirect to company dashboard
       }
-
-      // Handle successful login here (e.g., redirect or store user data)
-      console.log(response);
-      // Redirect or update the state to indicate successful login
     } catch (error) {
       setErrorMessage(error.detail || "Login failed. Please try again.");
     }
@@ -31,10 +34,7 @@ const Login = () => {
 
   if (!userType) {
     return (
-      <div
-        className="center-page"
-        style={{ backgroundImage: `url(${bgImage})` }}
-      >
+      <div className="center-page" style={{ backgroundImage: `url(${bgImage})` }}>
         <div className="form-container">
           <h2>Login As</h2>
           <button onClick={() => setUserType("student")}>Student</button>

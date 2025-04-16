@@ -1,0 +1,44 @@
+.dashboard-container {
+  padding: 40px;
+  width: 900vw;
+  margin: auto;
+  font-family: sans-serif;
+}
+
+.profile-section, .jobs-section, .applied-jobs-section {
+  background: #f5f9ff;
+  color: red;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.job-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.dashboard-actions {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dashboard-actions button {
+  padding: 12px;
+  background-color: #0056d2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dashboard-actions button:hover {
+  background-color: #003c9f;
+}
