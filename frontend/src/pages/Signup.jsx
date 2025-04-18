@@ -19,9 +19,9 @@ const Signup = () => {
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
-  const handleImageChange = (e) => {
-    setProfilePic(e.target.files[0]);
-  };
+  // const handleImageChange = (e) => {
+  //   setProfilePic(e.target.files[0]);
+  // };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -143,20 +143,20 @@ const Signup = () => {
                 onChange={handleChange}
                 required
               />
-              <input
+              {/* <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
                 name="profile_pic"
-              />
-              {profilePic && (
+              /> */}
+              {/* {profilePic && (
                 <img
                   src={URL.createObjectURL(profilePic)}
                   alt="Preview"
                   height="100"
                   style={{ marginTop: "10px", borderRadius: "8px" }}
                 />
-              )}
+              )} */}
             </>
           )}
 

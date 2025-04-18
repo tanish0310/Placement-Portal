@@ -64,14 +64,6 @@ const StudentDashboard = () => {
         <p>
           <strong>Year:</strong> {student?.year}
         </p>
-        {student?.profile_pic && (
-          <img
-            src={student.profile_pic}
-            alt={`${student.name}'s profile`}
-            height="100"
-            style={{ borderRadius: "8px" }}
-          />
-        )}
       </section>
       </div>
 
@@ -128,11 +120,11 @@ const StudentDashboard = () => {
         >
           Apply Job
         </button>
-        <button
+        {/* <button
           onClick={() => (window.location.href = "/student/update-profile")}
         >
           Update Profile
-        </button>
+        </button> */}
         <button onClick={handleLogout}>Logout</button>
       </div>
     </div>

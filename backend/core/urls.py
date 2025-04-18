@@ -12,5 +12,6 @@ urlpatterns = [
     path('login/company/', views.company_login, name='company_login'),
     path('login/admin/send-otp/', views.send_admin_otp, name='send_admin_otp'),
     path('login/admin/verify-otp/', views.verify_admin_otp, name='verify_admin_otp'),
+    path('post-job/', views.post_job, name='post_job'),
 
 ]

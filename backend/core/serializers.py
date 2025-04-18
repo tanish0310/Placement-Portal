@@ -18,9 +18,9 @@ class JobSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['name', 'email', 'password', 'cgpa', 'branch', 'year', 'profile_pic','created_at']
+        fields = ['name', 'email', 'password', 'cgpa', 'branch', 'year', 'created_at']
     
-
+# , 'profile_pic'
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company

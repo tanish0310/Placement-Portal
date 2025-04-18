@@ -33,6 +33,7 @@ const Login = () => {
         response = await loginCompany(formData);
         // Store the company data but no companyId in localStorage
         localStorage.setItem("company", JSON.stringify(response));
+         // Assuming response contains company.id
         navigate("/company/CompanyDashboard");
       }
     } catch (error) {

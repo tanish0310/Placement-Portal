@@ -2,19 +2,26 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view
+
 from rest_framework.response import Response
 from rest_framework import status
-
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.hashers import make_password
+
+from .serializers import LoginSerializer
+from .serializers import StudentSerializer, CompanySerializer
+from .serializers import JobSerializer
 from .models import Student
 from .models import Company
 
 
 
-from .serializers import LoginSerializer
-from .serializers import StudentSerializer, CompanySerializer
+
+
 
 import random
 from django.core.mail import send_mail
@@ -23,6 +30,39 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
 import json
 from .models import AdminOTP
+
+
+
+
+@api_view(['POST'])
+def post_job(request):
+    company_name = request.data.get('company_name')  # Get company_name from request data
+    if not company_name:
+        return Response({"detail": "Company name is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        company = Company.objects.get(name=company_name)  # Find company by name
+    except Company.DoesNotExist:
+        return Response({"detail": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    # Prepare the job data
+    job_data = {
+        "title": request.data.get("title"),
+        "description": request.data.get("description"),
+        "location": request.data.get("location"),
+        "salary": request.data.get("salary"),
+        "eligibility_criteria": request.data.get("eligibility"),
+        "application_deadline": request.data.get("deadline"),
+        "company": company.id,  # Associate the job with the company
+    }
+
+    serializer = JobSerializer(data=job_data)
+    if serializer.is_valid():
+        serializer.save()  # Save the job instance
+        return Response({"message": "Job posted successfully"}, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @csrf_exempt
 def send_admin_otp(request):
@@ -44,7 +84,7 @@ def send_admin_otp(request):
 
     return JsonResponse({"detail": "OTP sent successfully"})
 
-    
+
 
 @csrf_exempt  
 def verify_admin_otp(request):
@@ -153,6 +193,7 @@ def company_login(request):
         try:
             company = Company.objects.get(email=email)
             if check_password(password, company.password):
+                
                 company_data = CompanySerializer(company).data
                 return Response(company_data, status=status.HTTP_200_OK)
             else:
