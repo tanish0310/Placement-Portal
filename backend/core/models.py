@@ -29,20 +29,32 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+from django.db import models
+
+# core/models.py
 class Job(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     description = models.TextField()
     location = models.CharField(max_length=255)
-    salary = models.CharField(max_length=50)
-    eligibility_criteria = models.TextField()
-    application_deadline = models.DateField()
-
+    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    eligibility = models.TextField()
+    deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
     def __str__(self):
-        return f"{self.title} at {self.company.name}"
+        return self.title
+    
+class JobApplication(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    resume = models.FileField(upload_to='resumes/', null=True, blank=True)
+    applied_at = models.DateTimeField(auto_now_add=True)
+
+
+
 
 
 

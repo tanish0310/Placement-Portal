@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./Company.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CompanyDashboard = () => {
+  const navigate = useNavigate();
   const [companyData, setCompanyData] = useState(null);
   const [postedJobs, setPostedJobs] = useState([]);
 
@@ -25,7 +27,7 @@ const CompanyDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("company");
-    window.location.href = "/LandingPage";
+    navigate("/");
   };
 
   return (
@@ -67,9 +69,9 @@ const CompanyDashboard = () => {
         <button onClick={() => (window.location.href = "/company/PostJob")}>
           Post a Job
         </button>
-        <button onClick={() => (window.location.href = "/company/update-info")}>
+        {/* <button onClick={() => (window.location.href = "/company/update-info")}>
           Update Company Info
-        </button>
+        </button> */}
         <button
           onClick={() =>
             (window.location.href = "/company/update-job-criteria")

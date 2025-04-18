@@ -55,17 +55,17 @@ export const verifyAdminOtp = async (email, otp) => {
 };
 
 
-const API_BASE_URL = "http://localhost:8000/api";
 
-export const postJob = async (jobData) => {
+export const postJob = async (jobDetails) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/post-job/`, jobData, {
+    const response = await axios.post("http://localhost:8000/api/jobs/", jobDetails, {
       headers: {
         "Content-Type": "application/json",
       },
     });
     return response.data;
   } catch (error) {
-    throw error.response ? error.response.data : error;
+    throw error; // This will trigger the catch block in the PostJob component
   }
 };
+

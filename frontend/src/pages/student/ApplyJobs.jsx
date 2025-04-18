@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./ApplyJobs.css";
+import { useNavigate } from "react-router";
 
 const ApplyJobs = () => {
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [appliedJobs, setAppliedJobs] = useState([]);
   const [student, setStudent] = useState(null);
@@ -14,7 +16,8 @@ const ApplyJobs = () => {
       setStudent(storedStudent);
 
       try {
-        const jobsRes = await axios.get("/api/jobs");
+        const jobsRes = await axios.get("http://localhost:8000/api/jobs/list/");
+        console.log("Fetched jobs:", jobsRes.data); // 👀 Debug output
         setJobs(jobsRes.data);
 
         const appliedRes = await axios.get("/api/student/applied-jobs");
@@ -27,26 +30,31 @@ const ApplyJobs = () => {
     fetchData();
   }, []);
 
-  const handleApply = async (jobId) => {
-    try {
-      await axios.post(`/api/student/apply-job/${jobId}`);
-      alert("Applied successfully!");
-      setAppliedJobs([...appliedJobs, jobId]);
-    } catch (err) {
-      alert("Failed to apply for job");
-      console.error(err);
-    }
+  // Filter jobs based on student CGPA
+  const filteredJobs = jobs.filter((job) => {
+    const cgpaRequirement = parseFloat(job.eligibility);
+    return student?.cgpa >= cgpaRequirement;
+  });
+
+  const handleApply = (jobId, job) => {
+    console.log(`Applying to job with ID: ${jobId}`);
+    navigate(`/student/apply/${jobId}`, {
+      state: {
+        company: job.company_name,
+        title: job.title,
+      },
+    });
   };
 
   return (
     <div className="apply-jobs-container">
       <h1>Apply for Jobs</h1>
 
-      {jobs.length === 0 ? (
-        <p>No jobs available at the moment.</p>
+      {filteredJobs.length === 0 ? (
+        <p>No jobs available that match your eligibility.</p>
       ) : (
         <ul className="job-list">
-          {jobs.map((job) => (
+          {filteredJobs.map((job) => (
             <li key={job.id} className="job-card">
               <h2>{job.title}</h2>
               <p>
@@ -62,7 +70,7 @@ const ApplyJobs = () => {
               {appliedJobs.includes(job.id) ? (
                 <button disabled>Already Applied</button>
               ) : (
-                <button onClick={() => handleApply(job.id)}>Apply</button>
+                <button onClick={() => handleApply(job.id, job)}>Apply</button>
               )}
             </li>
           ))}

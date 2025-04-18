@@ -1,68 +1,175 @@
 # core/views.py
 
 from django.shortcuts import render
-from django.http import HttpResponse
-
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
-from rest_framework.decorators import api_view
-
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth.hashers import make_password
-
-from .serializers import LoginSerializer
-from .serializers import StudentSerializer, CompanySerializer
-from .serializers import JobSerializer
-from .models import Student
-from .models import Company
-
-
-
-
-
-
-import random
-from django.core.mail import send_mail
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
+
 import json
-from .models import AdminOTP
+import random
 
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.generics import ListAPIView
+from rest_framework import status
 
+from django.core.mail import send_mail
+from django.contrib.auth.hashers import check_password, make_password
+
+from .models import Student, Company, Job, AdminOTP
+from .serializers import (
+    LoginSerializer,
+    StudentSerializer,
+    CompanySerializer,
+    JobSerializer
+)
+
+# ----------------------------- STUDENT AUTH -------------------------------- #
+
+@api_view(['POST'])
+def student_signup(request):
+    student_data = {
+        'name': request.data.get('name'),
+        'email': request.data.get('email'),
+        'password': make_password(request.data.get('password')),
+        'cgpa': request.data.get('cgpa'),
+        'branch': request.data.get('branch'),
+        'year': request.data.get('year'),
+        'profile_pic': request.FILES.get('profile_pic'),
+    }
+
+    serializer = StudentSerializer(data=student_data)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Student registered successfully"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
-def post_job(request):
-    company_name = request.data.get('company_name')  # Get company_name from request data
-    if not company_name:
-        return Response({"detail": "Company name is required"}, status=status.HTTP_400_BAD_REQUEST)
+def student_login(request):
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
 
-    try:
-        company = Company.objects.get(name=company_name)  # Find company by name
-    except Company.DoesNotExist:
-        return Response({"detail": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            student = Student.objects.get(email=email)
+            if check_password(password, student.password):
+                student_data = StudentSerializer(student).data
+                return Response(student_data, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
+        except Student.DoesNotExist:
+            return Response({"detail": "Student does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Prepare the job data
-    job_data = {
-        "title": request.data.get("title"),
-        "description": request.data.get("description"),
-        "location": request.data.get("location"),
-        "salary": request.data.get("salary"),
-        "eligibility_criteria": request.data.get("eligibility"),
-        "application_deadline": request.data.get("deadline"),
-        "company": company.id,  # Associate the job with the company
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ----------------------------- COMPANY AUTH -------------------------------- #
+
+@api_view(['POST'])
+def company_signup(request):
+    company_data = {
+        'name': request.data.get('name'),
+        'email': request.data.get('email'),
+        'password': make_password(request.data.get('password')),
     }
 
-    serializer = JobSerializer(data=job_data)
-    if serializer.is_valid():
-        serializer.save()  # Save the job instance
-        return Response({"message": "Job posted successfully"}, status=status.HTTP_201_CREATED)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = CompanySerializer(data=company_data)
 
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "Company registered successfully"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def company_login(request):
+    serializer = LoginSerializer(data=request.data)
+    if serializer.is_valid():
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+
+        try:
+            company = Company.objects.get(email=email)
+            if check_password(password, company.password):
+                company_data = CompanySerializer(company).data
+                return Response(company_data, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "Incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ----------------------------- JOB MANAGEMENT ------------------------------ #
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Company, Job
+from .serializers import JobSerializer
+
+class JobCreateAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Get company ID - adjust based on your authentication system
+        # If using token auth, you might get company ID from request.user
+        company_id = request.data.get('company')
+        
+        if not company_id:
+            return Response(
+                {"error": "Company ID is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            company = Company.objects.get(id=company_id)
+        except Company.DoesNotExist:
+            return Response(
+                {"error": "Company not found"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        job_data = {
+            'title': request.data.get('title'),
+            'description': request.data.get('description'),
+            'location': request.data.get('location'),
+            'salary': request.data.get('salary'),
+            'eligibility': request.data.get('eligibility'),
+            'deadline': request.data.get('deadline'),
+            'company': company.id
+        }
+
+        serializer = JobSerializer(data=job_data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "message": "Job created successfully",
+                    "data": serializer.data
+                },
+                status=status.HTTP_201_CREATED
+            )
+        
+        return Response(
+            {
+                "error": "Invalid data",
+                "details": serializer.errors
+            },
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+class JobListAPIView(ListAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    ordering = ['-created_at']
+
+
+# ----------------------------- ADMIN OTP SYSTEM ---------------------------- #
 
 @csrf_exempt
 def send_admin_otp(request):
@@ -85,8 +192,7 @@ def send_admin_otp(request):
     return JsonResponse({"detail": "OTP sent successfully"})
 
 
-
-@csrf_exempt  
+@csrf_exempt
 def verify_admin_otp(request):
     if request.method != "POST":
         return JsonResponse({"detail": "Method not allowed"}, status=405)
@@ -117,88 +223,34 @@ def verify_admin_otp(request):
         return JsonResponse({"detail": f"Unexpected error: {str(e)}"}, status=500)
 
 
+# ----------------------------- JOB APPLY VIEW ---------------------------- #
 
-
-
-
-
-@api_view(['POST'])
-def student_signup(request):
-    student_data = {
-        'name': request.data.get('name'),
-        'email': request.data.get('email'),
-        'password': make_password(request.data.get('password')),  # ✅ hash the password here
-        'cgpa': request.data.get('cgpa'),
-        'branch': request.data.get('branch'),
-        'year': request.data.get('year'),
-        'profile_pic': request.FILES.get('profile_pic'),
-    }
-
-    serializer = StudentSerializer(data=student_data)
-
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "Student registered successfully"}, status=status.HTTP_201_CREATED)
-    else:
-        print("Serializer errors:", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .models import Job, JobApplication
+from .serializers import JobApplicationSerializer
 
 @api_view(['POST'])
-def company_signup(request):
-    company_data = {
-        'name': request.data.get('name'),
-        'email': request.data.get('email'),
-        'password': make_password(request.data.get('password')),
-    }
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def apply_job(request, job_id):
+    try:
+        job = Job.objects.get(id=job_id)
+    except Job.DoesNotExist:
+        return Response({"error": "Job not found"}, status=404)
 
-    serializer = CompanySerializer(data=company_data)
+    resume_file = request.FILES.get('resume')
 
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "Company registered successfully"}, status=status.HTTP_201_CREATED)
-    else:
-        print("Serializer errors:", serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if not resume_file:
+        return Response({"error": "No resume uploaded"}, status=400)
 
+    application = JobApplication.objects.create(
+        student=request.user,
+        job=job,
+        resume=resume_file
+    )
 
-
-
-
-@api_view(['POST'])
-def student_login(request):
-    serializer = LoginSerializer(data=request.data)
-    if serializer.is_valid():
-        email = serializer.validated_data['email']
-        password = serializer.validated_data['password']
-
-        try:
-            student = Student.objects.get(email=email)
-            if check_password(password, student.password):
-                 student_data = StudentSerializer(student).data
-                 return Response(student_data, status=status.HTTP_200_OK)
-            else:
-                return Response({"detail": "Incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
-        except Student.DoesNotExist:
-            return Response({"detail": "Student does not exist"}, status=status.HTTP_400_BAD_REQUEST)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['POST'])
-def company_login(request):
-    serializer = LoginSerializer(data=request.data)
-    if serializer.is_valid():
-        email = serializer.validated_data['email']
-        password = serializer.validated_data['password']
-
-        try:
-            company = Company.objects.get(email=email)
-            if check_password(password, company.password):
-                
-                company_data = CompanySerializer(company).data
-                return Response(company_data, status=status.HTTP_200_OK)
-            else:
-                return Response({"detail": "Incorrect password"}, status=status.HTTP_400_BAD_REQUEST)
-        except Company.DoesNotExist:
-            return Response({"detail": "Company not found"}, status=status.HTTP_400_BAD_REQUEST)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = JobApplicationSerializer(application)
+    return Response(serializer.data, status=201)

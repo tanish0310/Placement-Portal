@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./PostJob.css";
 import { postJob } from "../../api/user";
 
 const PostJob = () => {
-  const [jobData, setJobData] = useState({
+  const navigate = useNavigate();
+  const [jobDetails, setJobDetails] = useState({
     title: "",
     description: "",
     location: "",
@@ -12,136 +14,161 @@ const PostJob = () => {
     deadline: "",
   });
 
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Get company data from localStorage
+  const companyData = JSON.parse(localStorage.getItem("company"));
+  const companyId = companyData?.id; // Make sure your company data includes ID
+
   const handleChange = (e) => {
-    setJobData({ ...jobData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setJobDetails({
+      ...jobDetails,
+      [name]: value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Fetch the company data from localStorage
-    const storedCompanyData = localStorage.getItem("company");
+    // Validate required fields
+    const requiredFields = [
+      "title",
+      "description",
+      "location",
+      "salary",
+      "eligibility",
+      "deadline",
+    ];
+    const missingFields = requiredFields.filter((field) => !jobDetails[field]);
 
-    // If no company data is found, alert and stop the process
-    if (!storedCompanyData) {
-        alert("Please log in to post a job.");
-        return;
+    if (missingFields.length > 0) {
+      setError(`Please fill all required fields: ${missingFields.join(", ")}`);
+      return;
     }
 
-    let companyName = null;
+    if (!companyId) {
+      setError("Company information is missing. Please log in again.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
     try {
-        // Parse the stored company data
-        const parsedData = JSON.parse(storedCompanyData);
-        // Get the company name from the parsed data
-        companyName = parsedData?.name; // Assumes the company name is under the 'name' key
-    } catch (error) {
-        console.error("Error parsing company data from localStorage:", error);
-        alert("An error occurred while retrieving your company data.");
-        return;
+      // Prepare job data with company ID
+      const jobData = {
+        ...jobDetails,
+        company: companyId, // Send company ID instead of name
+        salary: parseFloat(jobDetails.salary).toFixed(2), // Ensure proper decimal format
+      };
+
+      console.log("Submitting job data:", jobData); // Debug log
+
+      await postJob(jobData);
+      alert("Job posted successfully!");
+      navigate("/company/CompanyDashboard");
+    } catch (err) {
+      console.error("Error posting job:", err);
+      setError(
+        err.response?.data?.error?.details ||
+          err.response?.data?.error ||
+          "Failed to post job. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
-
-    // If no company name is found, alert and stop the process
-    if (!companyName) {
-        alert("Company name not found. Please check your login data.");
-        return;
-    }
-
-    // Prepare the job data to send, including the company name
-    const jobDataToSend = {
-        ...jobData,
-        company_name: companyName,
-    };
-
-    // Sending job data to the server
-    try {
-        const response = await postJob(jobDataToSend);
-        if (response.status === 201) {
-            alert("Job posted successfully!");
-            setJobData({
-                title: "",
-                description: "",
-                location: "",
-                salary: "",
-                eligibility: "",
-                deadline: "",
-            });
-        } else {
-            alert("An error occurred while posting the job.");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        alert(error?.detail || "An error occurred while posting the job.");
-    }
-};
-
+  };
 
   return (
     <div className="post-job-container">
       <div className="post-job-card">
-        <h2 className="post-job-title">Post a New Job</h2>
+        <h2 className="post-job-title">Post a Job</h2>
         <form onSubmit={handleSubmit} className="post-job-form">
           <div className="form-group">
-            <label>Job Title</label>
+            <label htmlFor="title">Job Title*</label>
             <input
               type="text"
               name="title"
-              value={jobData.title}
+              value={jobDetails.title}
               onChange={handleChange}
+              placeholder="Enter job title"
               required
             />
           </div>
+
           <div className="form-group">
-            <label>Description</label>
+            <label htmlFor="description">Description*</label>
             <textarea
               name="description"
-              value={jobData.description}
+              value={jobDetails.description}
               onChange={handleChange}
+              placeholder="Enter job description"
               required
             />
           </div>
+
           <div className="form-group">
-            <label>Location</label>
+            <label htmlFor="location">Location*</label>
             <input
               type="text"
               name="location"
-              value={jobData.location}
+              value={jobDetails.location}
               onChange={handleChange}
+              placeholder="Enter job location"
               required
             />
           </div>
+
           <div className="form-group">
-            <label>Salary</label>
+            <label htmlFor="salary">Salary (USD)*</label>
             <input
               type="number"
               name="salary"
-              value={jobData.salary}
+              value={jobDetails.salary}
               onChange={handleChange}
+              placeholder="Enter salary"
+              min="0"
+              step="0.01"
               required
             />
           </div>
+
           <div className="form-group">
-            <label>Eligibility Criteria</label>
-            <textarea
+            <label htmlFor="eligibility">Eligibility Criteria*</label>
+            <input
+              type="text"
               name="eligibility"
-              value={jobData.eligibility}
+              value={jobDetails.eligibility}
               onChange={handleChange}
+              placeholder="Enter eligibility criteria"
               required
             />
           </div>
+
           <div className="form-group">
-            <label>Application Deadline</label>
+            <label htmlFor="deadline">Application Deadline*</label>
             <input
               type="date"
               name="deadline"
-              value={jobData.deadline}
+              value={jobDetails.deadline}
               onChange={handleChange}
+              min={new Date().toISOString().split("T")[0]}
               required
             />
           </div>
-          <button type="submit" className="submit-btn">
-            Post Job
+
+          <button type="submit" className="submit-btn" disabled={loading}>
+            {loading ? "Posting Job..." : "Post Job"}
           </button>
         </form>
+
+        {error && (
+          <div className="error-message">
+            {typeof error === "object" ? JSON.stringify(error) : error}
+          </div>
+        )}
       </div>
     </div>
   );

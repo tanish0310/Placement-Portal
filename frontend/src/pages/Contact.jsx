@@ -16,7 +16,7 @@ const Contact = () => {
             <h2>Contact Information</h2>
             <p>
               <span className="highlight">Email:</span>{" "}
-              support@placementpulse.com
+              placementportal.help@gmail.com
             </p>
             <p>
               <span className="highlight">Phone:</span> +91 9876543210

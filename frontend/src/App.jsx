@@ -11,6 +11,7 @@ import CompanyDashboard from "./pages/company/CompanyDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import PostJob from "./pages/company/PostJob";
 import ApplyJobs from "./pages/student/ApplyJobs";
+import UploadResume from "./pages/student/UploadResume";
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
         <Route path="/company/PostJob" element={<PostJob />} />
         <Route path="/student/ApplyJobs" element={<ApplyJobs />} />
+        <Route path="/student/apply/:jobId" element={<UploadResume />} />
       </Routes>
     </Router>
   );

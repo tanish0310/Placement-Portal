@@ -31,7 +31,7 @@ const Login = () => {
         navigate("/student/StudentDashboard");
       } else if (userType === "company") {
         response = await loginCompany(formData);
-        // Store the company data but no companyId in localStorage
+        
         localStorage.setItem("company", JSON.stringify(response));
          // Assuming response contains company.id
         navigate("/company/CompanyDashboard");

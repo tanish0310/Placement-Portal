@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./StudentDashboard.css";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 const StudentDashboard = () => {
+  const navigate = useNavigate();
   const [student, setStudent] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -35,7 +37,7 @@ const StudentDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("student");
-    window.location.href = "/LandingPage";
+    navigate("/");
   };
 
   const handleApply = (jobId) => {
