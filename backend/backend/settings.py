@@ -128,3 +128,15 @@ AUTHENTICATION_BACKENDS = [
     'yourapp.authentication_backends.CustomAuthenticationBackend',  # Add the custom backend
     'django.contrib.auth.backends.ModelBackend',  # Default backend
 ]
+
+# INSTALLED_APPS += ['corsheaders']
+# MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware'] + MIDDLEWARE
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Use appropriate SMTP server
+EMAIL_PORT = 587  # Standard SMTP port for Gmail
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'aadib9424@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'dogtzwhxxkcdldkl'  # Replace with your app password

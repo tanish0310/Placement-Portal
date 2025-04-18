@@ -64,7 +64,7 @@ const CompanyDashboard = () => {
       </div>
 
       <div className="dashboard-actions">
-        <button onClick={() => (window.location.href = "/company/post-job")}>
+        <button onClick={() => (window.location.href = "/company/PostJob")}>
           Post a Job
         </button>
         <button onClick={() => (window.location.href = "/company/update-info")}>

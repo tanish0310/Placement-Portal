@@ -5,6 +5,7 @@ from .models import Student
 from .models import Company
 
 
+
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
@@ -21,3 +22,4 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     
         
+

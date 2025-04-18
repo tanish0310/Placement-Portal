@@ -124,14 +124,14 @@ const StudentDashboard = () => {
       {/* Actions */}
       <div className="dashboard-actions">
         <button
+          onClick={() => (window.location.href = "/student/apply-job")}
+        >
+          Apply Job
+        </button>
+        <button
           onClick={() => (window.location.href = "/student/update-profile")}
         >
           Update Profile
-        </button>
-        <button
-          onClick={() => (window.location.href = "/student/change-password")}
-        >
-          Change Password
         </button>
         <button onClick={handleLogout}>Logout</button>
       </div>
