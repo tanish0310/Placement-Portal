@@ -12,6 +12,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import PostJob from "./pages/company/PostJob";
 import ApplyJobs from "./pages/student/ApplyJobs";
 import UploadResume from "./pages/student/UploadResume";
+import ViewCompany from "./pages/admin/ViewCompany";
+import ChangePassword from "./pages/student/ChangePassword";
+import ViewStudents from "./pages/admin/ViewStudents";
 
 
 function App() {
@@ -33,9 +36,13 @@ function App() {
           element={<CompanyDashboard />}
         />
         <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
+        <Route path="/admin/ViewCompany" element={<ViewCompany />} />
         <Route path="/company/PostJob" element={<PostJob />} />
         <Route path="/student/ApplyJobs" element={<ApplyJobs />} />
         <Route path="/student/apply/:jobId" element={<UploadResume />} />
+        <Route path="/admin/ViewCompany" element={<ViewCompany />} />
+        <Route path="/student/ChangePassword" element={<ChangePassword />} />
+        <Route path="/admin/ViewStudents" element={<ViewStudents />} />
       </Routes>
     </Router>
   );

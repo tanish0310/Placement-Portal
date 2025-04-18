@@ -79,25 +79,7 @@ const StudentDashboard = () => {
 
         {/* Job Listings */}
         <div className="rightside">
-          <section className="jobs-section">
-            <h2>Available Jobs</h2>
-            {jobs.length === 0 ? (
-              <p>No job listings available currently.</p>
-            ) : (
-              <ul className="job-list">
-                {jobs.map((job) => (
-                  <li key={job.id} className="job-card">
-                    <h3>{job.title}</h3>
-                    <p><strong>Company:</strong> {job.company_name}</p>
-                    <p><strong>Eligibility:</strong> {job.eligibility}</p>
-                    <p><strong>Description:</strong> {job.description}</p>
-                    <button onClick={() => handleApply(job.id)}>Apply</button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
+          
           {/* Applied Jobs */}
           <section className="applied-jobs-section">
             <h2>Jobs You've Applied To</h2>
@@ -123,9 +105,9 @@ const StudentDashboard = () => {
           Apply Job
         </button>
         <button
-          onClick={() => (window.location.href = "/student/update-profile")}
+          onClick={() => (window.location.href = "/student/ChangePassword")}
         >
-          Update Profile
+          Change Password
         </button>
         <button onClick={handleLogout}>Logout</button>
       </div>

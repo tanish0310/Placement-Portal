@@ -254,3 +254,87 @@ def apply_job(request, job_id):
 
     serializer = JobApplicationSerializer(application)
     return Response(serializer.data, status=201)
+# ----------------------------------------------change pwd--------------------------------------------------#
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import PasswordResetOTP
+import random, string
+import json
+
+@csrf_exempt
+def send_otp(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+
+        otp = ''.join(random.choices(string.digits, k=6))
+        PasswordResetOTP.objects.create(email=email, otp=otp)
+
+        # Send OTP via email
+        send_mail(
+            subject='Your OTP Code',
+            message=f'Your OTP for password reset is {otp}',
+            from_email='your@email.com',
+            recipient_list=[email],
+        )
+
+        return JsonResponse({'message': 'OTP sent to email'})
+
+from django.contrib.auth import get_user_model
+
+@csrf_exempt
+def reset_password(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email')
+        otp = data.get('otp')
+        new_password = data.get('new_password')
+
+        try:
+            otp_record = PasswordResetOTP.objects.filter(email=email, otp=otp).latest('created_at')
+            if not otp_record.is_valid():
+                return JsonResponse({'error': 'OTP expired'}, status=400)
+        except PasswordResetOTP.DoesNotExist:
+            return JsonResponse({'error': 'Invalid OTP'}, status=400)
+
+        user = get_user_model().objects.get(email=email)
+        user.set_password(new_password)
+        user.save()
+
+        return JsonResponse({'message': 'Password reset successful'})
+
+
+# ------------------------------------------------------------------------------------
+
+class CompanyListView(APIView):
+    def get(self, request):
+        companies = Company.objects.all()
+        serializer = CompanySerializer(companies, many=True)
+        return Response(serializer.data)
+
+class CompanyDeleteView(APIView):
+    def delete(self, request, pk):
+        try:
+            company = Company.objects.get(pk=pk)
+            company.delete()
+            return Response({"message": "Company deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Company.DoesNotExist:
+            return Response({"error": "Company not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+
+class StudentListView(APIView):
+    def get(self, request):
+        students = Student.objects.all()
+        serializer = StudentSerializer(students, many=True)
+        return Response(serializer.data)
+
+class StudentDeleteView(APIView):
+    def delete(self, request, pk):
+        try:
+            student = Student.objects.get(pk=pk)
+            student.delete()
+            return Response({"message": "Student deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Student.DoesNotExist:
+            return Response({"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)

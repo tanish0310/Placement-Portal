@@ -69,3 +69,50 @@ export const postJob = async (jobDetails) => {
   }
 };
 
+
+// Fetch all companies
+export const fetchCompanies = async () => {
+  try {
+    const response = await axios.get("companies/");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching companies:", error);
+    throw error;
+  }
+};
+
+// Delete a specific company
+export const deleteCompany = async (id) => {
+  try {
+    const response = await axios.delete(`companies/${id}/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting company:", error);
+    throw error;
+  }
+};
+
+// Fetch all students
+export const fetchStudents = async () => {
+  try {
+    const response = await axios.get("students/"); // Adjust the endpoint if necessary
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    throw error;
+  }
+};
+
+// Delete a specific student
+export const deleteStudent = async (id) => {
+  try {
+    const response = await axios.delete(`students/${id}/`); // Adjust the endpoint if necessary
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting student:", error);
+    throw error;
+  }
+};
+
+export default { fetchStudents, deleteStudent };
+

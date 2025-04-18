@@ -18,6 +18,8 @@ class Student(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
        
     
 class Company(models.Model):
@@ -66,3 +68,17 @@ class AdminOTP(models.Model):
 
     def is_expired(self):
         return timezone.now() > self.created_at + datetime.timedelta(minutes=5)
+
+
+
+from django.db import models
+from django.utils import timezone
+import random
+
+class PasswordResetOTP(models.Model):
+    email = models.EmailField()
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def is_valid(self):
+        return timezone.now() - self.created_at < timezone.timedelta(minutes=10)
