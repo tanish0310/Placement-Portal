@@ -3,6 +3,15 @@
 from rest_framework import serializers
 from .models import Student
 from .models import Company
+from rest_framework import serializers
+from .models import Job
+
+class JobSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Job
+        fields = ['id', 'company', 'title', 'description', 'location', 'salary', 'eligibility_criteria', 'application_deadline', 'created_at']
+        read_only_fields = ['company', 'created_at']
+
 
 
 

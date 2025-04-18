@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import CompanyDashboard from "./pages/company/CompanyDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import PostJob from "./pages/company/PostJob";
+import ApplyJobs from "./pages/student/ApplyJobs";
 
 
 function App() {
@@ -31,11 +32,8 @@ function App() {
           element={<CompanyDashboard />}
         />
         <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
-        <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
-        <Route path="/admin/AdminDashboard" element={<AdminDashboard />} />
         <Route path="/company/PostJob" element={<PostJob />} />
-        {/* <Route path="/student/update-profile" element={<UpdateProfile />} />
-        <Route path="/student/change-password" element={<ChangePassword />} /> */}
+        <Route path="/student/ApplyJobs" element={<ApplyJobs />} />
       </Routes>
     </Router>
   );

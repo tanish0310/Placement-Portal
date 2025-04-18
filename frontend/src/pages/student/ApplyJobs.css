@@ -1,0 +1,86 @@
+
+.apply-jobs-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #2371e6;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.apply-jobs-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+.job-list {
+  list-style: none;
+  padding: 0;
+}
+
+.job-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: box-shadow 0.2s ease;
+}
+
+.job-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.job-card h2 {
+  margin: 0 0 10px 0;
+  color: #2980b9;
+}
+
+.job-card p {
+  margin: 5px 0;
+  color: #333;
+}
+
+.job-card button {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background-color: #2980b9;
+  border: none;
+  border-radius: 6px;
+  color: rgb(162, 36, 36);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.job-card button:disabled {
+  background-color: #092232;
+  cursor: not-allowed;
+}
+
+.page-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.page-actions button {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #27ae60;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.page-actions button:hover {
+  background-color: #219150;
+}

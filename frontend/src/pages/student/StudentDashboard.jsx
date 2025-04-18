@@ -124,7 +124,7 @@ const StudentDashboard = () => {
       {/* Actions */}
       <div className="dashboard-actions">
         <button
-          onClick={() => (window.location.href = "/student/apply-job")}
+          onClick={() => (window.location.href = "/student/ApplyJobs")}
         >
           Apply Job
         </button>

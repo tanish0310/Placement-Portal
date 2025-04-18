@@ -53,3 +53,5 @@ export const verifyAdminOtp = async (email, otp) => {
   const response = await axios.post("/login/admin/verify-otp/", { email, otp });
   return response.data;
 };
+
+
