@@ -104,7 +104,7 @@
   .job-card button {
     margin-top: 0.5rem;
     padding: 0.5rem 1rem;
-    background-color: #3498db;
+    /* background-color: #3498db; */
     color: white;
     border: none;
     border-radius: 6px;
