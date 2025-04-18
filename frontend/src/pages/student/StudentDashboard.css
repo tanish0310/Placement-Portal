@@ -1,0 +1,167 @@
+.studentdashboard-container {
+    background: #f5f7fa;
+    height:100vh;
+    width:100vw;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .dashboard-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    width: 100%;
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+  }
+  
+  .leftside,
+  .rightside {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  /* Profile Section */
+  .profile-section {
+    background: #bfd1df;
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding-top:5rem;
+    padding-bottom: 5rem;
+  }
+  
+  .profile-section h2 {
+    margin-bottom: 1rem;
+    color: #34495e;
+  }
+  
+  .profile-section p {
+    margin: 0.5rem 0;
+    color: #333;
+  }
+  
+  .profile-section img {
+    margin-top: 1rem;
+    border-radius: 8px;
+    border: 2px solid #3498db;
+  }
+  
+  /* Job Listings */
+  .jobs-section,
+  .applied-jobs-section {
+    background: #fdfefe;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .jobs-section h2,
+  .applied-jobs-section h2 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+  }
+  
+  .job-list,
+  .applied-job-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .job-card {
+    background: #ecf0f1;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 5px solid #3498db;
+  }
+  
+  .job-card h3 {
+    margin: 0;
+    color: #2c3e50;
+  }
+  
+  .job-card p {
+    margin: 0.3rem 0;
+    color: #555;
+  }
+  
+  .job-card button {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .job-card button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Applied Jobs */
+  .applied-job-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ddd;
+    color: #2c3e50;
+  }
+  
+  /* Dashboard Actions */
+  .dashboard-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 0.1rem;
+    margin-top: 1rem;
+  }
+  
+  .dashboard-actions button {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    max-width: 12rem;
+    margin-left: 30rem;
+  }
+  
+  .dashboard-actions button:hover {
+    background: #27ae60;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .dashboard-container {
+      flex-direction: column;
+      padding: 1rem;
+    }
+  
+    .dashboard-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .dashboard-actions button {
+      width: 80%;
+    }
+  }
+  

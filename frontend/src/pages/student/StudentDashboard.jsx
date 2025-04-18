@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../App.css";
+import "./StudentDashboard.css";
 import axios from "axios";
 
 const StudentDashboard = () => {
@@ -44,10 +44,12 @@ const StudentDashboard = () => {
   };
 
   return (
-    <div className="dashboard-container">
-      <h1>Welcome, {student?.name || "Student"}</h1>
+    <div className="studentdashboard-container">
+      <div className="dashboard-container">
+      <h1 >Welcome, {student?.name || "Student"}</h1>
 
       {/* Profile Section */}
+      <div className="leftside">
       <section className="profile-section">
         <h2>Profile</h2>
         <p>
@@ -71,8 +73,10 @@ const StudentDashboard = () => {
           />
         )}
       </section>
+      </div>
 
       {/* Available Jobs */}
+      <div className="rightside">
       <section className="jobs-section">
         <h2>Available Jobs</h2>
         {jobs.length === 0 ? (
@@ -115,6 +119,7 @@ const StudentDashboard = () => {
           </ul>
         )}
       </section>
+      </div>
 
       {/* Actions */}
       <div className="dashboard-actions">
@@ -130,6 +135,7 @@ const StudentDashboard = () => {
         </button>
         <button onClick={handleLogout}>Logout</button>
       </div>
+    </div>
     </div>
   );
 };

@@ -91,7 +91,7 @@ const Signup = () => {
       <div className="form-container">
         <h2>{userType.charAt(0).toUpperCase() + userType.slice(1)} Signup</h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="form-file">
           <input
             type="text"
             name="name"
