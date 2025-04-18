@@ -55,3 +55,17 @@ export const verifyAdminOtp = async (email, otp) => {
 };
 
 
+const API_BASE_URL = "http://localhost:8000/api";
+
+export const postJob = async (jobData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/post-job/`, jobData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response ? error.response.data : error;
+  }
+};

@@ -138,5 +138,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Use appropriate SMTP server
 EMAIL_PORT = 587  # Standard SMTP port for Gmail
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'aadib9424@gmail.com'  # Replace with your email
-EMAIL_HOST_PASSWORD = 'dogtzwhxxkcdldkl'  # Replace with your app password
+EMAIL_HOST_USER = 'placementportal.help@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'yqjubmqndwcpmwms'  # Replace with your app password
+

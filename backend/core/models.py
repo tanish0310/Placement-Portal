@@ -1,6 +1,8 @@
 # core/models.py
 
 from django.db import models
+from django.utils import timezone
+import datetime
 
 class Student(models.Model):
     name = models.CharField(max_length=100)
@@ -26,8 +28,6 @@ class Company(models.Model):
     
     def __str__(self):
         return self.name
-from django.db import models
-from .models import Company
 
 class Job(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='jobs')
@@ -44,10 +44,9 @@ class Job(models.Model):
     def __str__(self):
         return f"{self.title} at {self.company.name}"
 
-from django.db import models
-from django.utils import timezone
-import datetime
 
+
+ 
 class AdminOTP(models.Model):
     email = models.EmailField()
     otp = models.CharField(max_length=6)

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./PostJob.css"; // CSS file for styles
+import "./PostJob.css";
+import { postJob } from "../../api/user";
 
 const PostJob = () => {
   const [jobData, setJobData] = useState({
@@ -14,51 +15,64 @@ const PostJob = () => {
   const handleChange = (e) => {
     setJobData({ ...jobData, [e.target.name]: e.target.value });
   };
-const handleSubmit = async (e) => {
-  e.preventDefault();
 
-  const companyId = localStorage.getItem("companyId");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const jobDataToSend = {
-    title: jobData.title,
-    description: jobData.description,
-    location: jobData.location,
-    salary: jobData.salary,
-    eligibility: jobData.eligibility,
-    deadline: jobData.deadline,
-    company: companyId, // Add companyId to the job data
-  };
+    // Fetch the company data from localStorage
+    const storedCompanyData = localStorage.getItem("company");
 
-  try {
-    const response = await fetch("http://localhost:8000/api/jobs/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(jobDataToSend),
-    });
-
-    if (response.ok) {
-      alert("Job posted successfully!");
-      setJobData({
-        title: "",
-        description: "",
-        location: "",
-        salary: "",
-        eligibility: "",
-        deadline: "",
-      });
-    } else {
-      alert("Failed to post job.");
+    // If no company data is found, alert and stop the process
+    if (!storedCompanyData) {
+        alert("Please log in to post a job.");
+        return;
     }
-  } catch (error) {
-    console.error("Error:", error);
-    alert("An error occurred while posting the job.");
-  }
+
+    let companyName = null;
+    try {
+        // Parse the stored company data
+        const parsedData = JSON.parse(storedCompanyData);
+        // Get the company name from the parsed data
+        companyName = parsedData?.name; // Assumes the company name is under the 'name' key
+    } catch (error) {
+        console.error("Error parsing company data from localStorage:", error);
+        alert("An error occurred while retrieving your company data.");
+        return;
+    }
+
+    // If no company name is found, alert and stop the process
+    if (!companyName) {
+        alert("Company name not found. Please check your login data.");
+        return;
+    }
+
+    // Prepare the job data to send, including the company name
+    const jobDataToSend = {
+        ...jobData,
+        company_name: companyName,
+    };
+
+    // Sending job data to the server
+    try {
+        const response = await postJob(jobDataToSend);
+        if (response.status === 201) {
+            alert("Job posted successfully!");
+            setJobData({
+                title: "",
+                description: "",
+                location: "",
+                salary: "",
+                eligibility: "",
+                deadline: "",
+            });
+        } else {
+            alert("An error occurred while posting the job.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert(error?.detail || "An error occurred while posting the job.");
+    }
 };
-
-
-
 
 
   return (
