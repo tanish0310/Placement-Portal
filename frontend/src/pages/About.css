@@ -1,57 +1,80 @@
-/* Ensure no extra margins or paddings from body */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Section styling */
 .about-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  height: calc(100vh - 60px); /* Adjust this based on your navbar height */
-  padding: 2rem;
-  background: rgb(25, 22, 60);
-  color: #ffffff;
-  width: 100vw; /* This ensures full width */
-  overflow: hidden; /* Hide anything that might overflow */
+  min-height: calc(100vh - 60px);
+  padding: 3rem 1.5rem;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+  color: #e0e0e0;
+  width: 100vw;
+  overflow: hidden;
+  font-family: "Inter", sans-serif;
 }
 
 .title {
-  font-size: 3rem;
-  color: rgb(206, 113, 105);
-  margin-bottom: 1rem;
-  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  font-size: 2.75rem;
+  color: #f87171;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .description {
-  font-size: 1.2rem;
-  line-height: 1.8;
-  max-width: 800px;
-  margin-bottom: 2rem;
-  color: #e0e7ff;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  max-width: 700px;
+  margin-bottom: 2.5rem;
+  color: #d1d5db;
+  font-weight: 400;
 }
 
 .highlight {
-  color: rgb(206, 113, 105);
-  font-weight: bold;
+  color: #f87171;
+  font-weight: 600;
 }
 
 .btn {
-  padding: 1rem 2.5rem;
+  padding: 0.875rem 2.25rem;
   font-size: 1rem;
-  background: linear-gradient(45deg, rgb(206, 113, 105), #d97706);
+  background: linear-gradient(90deg, #f87171, #fb923c);
   color: #ffffff;
   border: none;
-  border-radius: 30px;
+  border-radius: 50px;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(248, 113, 113, 0.3);
+  background: linear-gradient(90deg, #fb923c, #f87171);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    max-width: 90%;
+  }
+
+  .btn {
+    padding: 0.75rem 2rem;
+    font-size: 0.875rem;
+  }
 }
