@@ -43,3 +43,13 @@ export const loginCompany = async (formData) => {
     throw error.response?.data || { detail: "Company login failed" };
   }
 };
+
+export const sendAdminOtp = async (email) => {
+  const response = await axios.post("/login/admin/send-otp/", { email });
+  return response.data;
+};
+
+export const verifyAdminOtp = async (email, otp) => {
+  const response = await axios.post("/login/admin/verify-otp/", { email, otp });
+  return response.data;
+};

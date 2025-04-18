@@ -12,8 +12,71 @@ from .models import Student
 from .models import Company
 
 
+
 from .serializers import LoginSerializer
 from .serializers import StudentSerializer, CompanySerializer
+
+import random
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.timezone import now
+import json
+from .models import AdminOTP
+
+@csrf_exempt
+def send_admin_otp(request):
+    data = json.loads(request.body)
+    email = data.get("email")
+
+    if not email:
+        return JsonResponse({"detail": "Email is required"}, status=400)
+
+    otp = str(random.randint(10000, 99999))
+    AdminOTP.objects.create(email=email, otp=otp)
+
+    send_mail(
+        subject="Your Admin OTP",
+        message=f"Your OTP is: {otp}",
+        from_email="noreply@placementportal.com",
+        recipient_list=[email],
+    )
+
+    return JsonResponse({"detail": "OTP sent successfully"})
+
+    
+
+@csrf_exempt  
+def verify_admin_otp(request):
+    if request.method != "POST":
+        return JsonResponse({"detail": "Method not allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        email = data.get("email")
+        otp = data.get("otp")
+
+        if not email or not otp:
+            return JsonResponse({"detail": "Email and OTP are required"}, status=400)
+
+        latest_otp = AdminOTP.objects.filter(email=email).latest("created_at")
+
+        if latest_otp.otp == otp:
+            if not latest_otp.is_expired():
+                return JsonResponse({"success": True, "admin": {"email": email}}, status=200)
+            else:
+                return JsonResponse({"detail": "OTP has expired"}, status=400)
+        else:
+            return JsonResponse({"detail": "Incorrect OTP"}, status=400)
+
+    except AdminOTP.DoesNotExist:
+        return JsonResponse({"detail": "No OTP found for this email"}, status=404)
+    except json.JSONDecodeError:
+        return JsonResponse({"detail": "Invalid JSON body"}, status=400)
+    except Exception as e:
+        return JsonResponse({"detail": f"Unexpected error: {str(e)}"}, status=500)
+
+
 
 
 
