@@ -224,36 +224,40 @@ def verify_admin_otp(request):
 
 
 # ----------------------------- JOB APPLY VIEW ---------------------------- #
-
-from rest_framework.decorators import api_view, permission_classes, parser_classes
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .models import Job, JobApplication
-from .serializers import JobApplicationSerializer
+from rest_framework import status
+from .models import Job, JobApplication, Student
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@parser_classes([MultiPartParser, FormParser])
 def apply_job(request, job_id):
     try:
+        email = request.POST.get('email')
+        resume = request.FILES.get('resume')
+
+        if not email or not resume:
+            return Response({"detail": "Email and resume are required."}, status=400)
+
+        # Fetch student manually
+        student = Student.objects.get(email=email)
         job = Job.objects.get(id=job_id)
+
+        # Create JobApplication
+        application = JobApplication.objects.create(
+            job=job,
+            student=student,
+            resume=resume
+        )
+
+        return Response({"message": "Applied successfully."}, status=200)
+
+    except Student.DoesNotExist:
+        return Response({"detail": "Student not found."}, status=404)
     except Job.DoesNotExist:
-        return Response({"error": "Job not found"}, status=404)
+        return Response({"detail": "Job not found."}, status=404)
+    except Exception as e:
+        return Response({"detail": str(e)}, status=500)
 
-    resume_file = request.FILES.get('resume')
-
-    if not resume_file:
-        return Response({"error": "No resume uploaded"}, status=400)
-
-    application = JobApplication.objects.create(
-        student=request.user,
-        job=job,
-        resume=resume_file
-    )
-
-    serializer = JobApplicationSerializer(application)
-    return Response(serializer.data, status=201)
 # ----------------------------------------------change pwd--------------------------------------------------#
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -338,3 +342,164 @@ class StudentDeleteView(APIView):
             return Response({"message": "Student deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except Student.DoesNotExist:
             return Response({"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+#------------------------------------------------------------------- GET APPLICATIONS--------------------------------------------
+from django.conf import settings
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])
+def get_applications_by_company(request):
+    email = request.GET.get('email')  # company email
+
+    try:
+        company = Company.objects.get(email=email)
+        jobs = Job.objects.filter(company=company)
+        applications = JobApplication.objects.filter(job__in=jobs).select_related('student', 'job')
+
+        data = []
+        for app in applications:
+            # Check if the resume URL contains '/media/' and remove it if present
+            resume_path = app.resume.url
+            if resume_path.startswith('/media/'):
+                resume_path = resume_path[7:]  # Remove '/media/' from the start
+
+            resume_url = request.build_absolute_uri(f"{settings.MEDIA_URL}{resume_path}")
+
+            data.append({
+                "student_name": app.student.name,
+                "student_email": app.student.email,
+                "student_cgpa": app.student.cgpa,
+                "preferred_location": app.preferred_location,
+                "resume_url": resume_url,
+                "job_title": app.job.title,
+                "applied_at": app.applied_at,
+            })
+
+        return Response(data, status=200)
+
+    except Company.DoesNotExist:
+        return Response({"detail": "Company not found."}, status=404)
+    except Exception as e:
+        return Response({"detail": str(e)}, status=500)
+
+
+
+
+# from django.conf import settings
+# from core.models import JobApplication
+
+# app = JobApplication.objects.get(id=1)
+# resume_url = settings.MEDIA_URL + app.resume.url
+# print(resume_url)
+
+# ------------------------------------------------------------------JOB RELATED VIEWS------------------------------------------------------#
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .models import JobApplication, Student
+from .serializers import JobApplicationSerializer
+
+# For Student: View own applications
+class StudentAppliedJobsView(APIView):
+    def get(self, request):
+        student_id = request.GET.get('student_id') 
+        applications = JobApplication.objects.filter(student_id=student_id)
+        serializer = JobApplicationSerializer(applications, many=True)
+        return Response(serializer.data)
+
+# For Company: Accept/Reject Applications
+class UpdateApplicationStatusView(APIView):
+    def post(self, request, pk):
+        try:
+            application = JobApplication.objects.get(pk=pk)
+            new_status = request.data.get('status')
+            if new_status in ['Accepted', 'Rejected']:
+                application.status = new_status
+                application.save()
+                return Response({"message": f"Application {new_status}."})
+            else:
+                return Response({"error": "Invalid status."}, status=400)
+        except JobApplication.DoesNotExist:
+            return Response({"error": "Application not found."}, status=404)
+        
+class JobApplicationListView(APIView):
+    def get(self, request):
+        applications = JobApplication.objects.select_related('student', 'job').all()
+        data = [
+            {
+                "student": application.student.name,  # Manually adding student name
+                "job": application.job.title,        # Manually adding job title
+                "resume": application.resume.url if application.resume else None,
+                "applied_at": application.applied_at,
+            }
+            for application in applications
+        ]
+        return Response(data)
+
+
+
+# -----------------------------------accept or reject applications --------------------------------------------------------#
+from django.core.mail import send_mail
+from django.utils import timezone
+from datetime import timedelta
+
+def send_application_status_email(student_email, job_title, status):
+    # Customize the message based on the status
+    if status == 'Accepted':
+        message = f"Congratulations! Your application for the job '{job_title}' has been accepted. Your interview is scheduled for {timezone.now() + timedelta(days=3):%Y-%m-%d %H:%M:%S}."
+    elif status == 'Rejected':
+        message = f"Sorry, your application for the job '{job_title}' has been rejected. We appreciate your interest and encourage you to apply again in the future."
+
+    # Sending the email
+    send_mail(
+        subject=f"Your Application Status for {job_title}",
+        message=message,
+        from_email="your_email@gmail.com",
+        recipient_list=[student_email],
+        fail_silently=False,
+    )
+
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from .models import JobApplication
+from .serializers import JobApplicationSerializer
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+@api_view(['POST'])
+def decide_application(request):
+    try:
+        application_id = request.data['id']
+        decision = request.data['decision']
+        # Your decision handling logic here
+        
+        # Respond with success
+        return Response({"message": "Decision updated successfully!"}, status=200)
+    except Exception as e:
+        return Response({"message": str(e)}, status=400)
+
+
+# ----------------------------------------------------------------------------------------
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import JobApplication
+from .serializers import ApplicationSerializer
+
+@api_view(['GET'])
+def view_applications(request):
+    company_email = request.query_params.get('email')
+    
+    if not company_email:
+        return Response({'error': 'Missing company email'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Fetch applications based on company email
+    job_applications = JobApplication.objects.filter(job__company__email=company_email)
+
+    # Serialize the applications
+    serializer = ApplicationSerializer(job_applications, many=True)
+
+    return Response(serializer.data)

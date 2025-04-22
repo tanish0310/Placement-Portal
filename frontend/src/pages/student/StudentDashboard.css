@@ -214,3 +214,25 @@ h1 {
         padding: 1.5rem;
     }
 }
+
+.status-tag {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.status-tag.pending {
+  background-color: #f0ad4e;
+  color: #fff;
+}
+
+.status-tag.accepted {
+  background-color: #5cb85c;
+  color: #fff;
+}
+
+.status-tag.rejected {
+  background-color: #d9534f;
+  color: #fff;
+}

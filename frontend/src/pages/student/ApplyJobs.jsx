@@ -78,7 +78,7 @@ const ApplyJobs = () => {
       )}
 
       <div className="page-actions">
-        <button
+        {/* <button
           onClick={() => (window.location.href = "/student/update-profile")}
         >
           Update Profile
@@ -87,7 +87,7 @@ const ApplyJobs = () => {
           onClick={() => (window.location.href = "/student/change-password")}
         >
           Change Password
-        </button>
+        </button> */}
         <button
           onClick={() => (window.location.href = "/student/StudentDashboard")}
         >

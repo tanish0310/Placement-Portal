@@ -15,6 +15,8 @@ import UploadResume from "./pages/student/UploadResume";
 import ViewCompany from "./pages/admin/ViewCompany";
 import ChangePassword from "./pages/student/ChangePassword";
 import ViewStudents from "./pages/admin/ViewStudents";
+import ViewApplications from "./pages/company/ViewApplications";
+import AdminViewApplications from "./pages/admin/AdminViewApplications";
 
 
 function App() {
@@ -43,6 +45,8 @@ function App() {
         <Route path="/admin/ViewCompany" element={<ViewCompany />} />
         <Route path="/student/ChangePassword" element={<ChangePassword />} />
         <Route path="/admin/ViewStudents" element={<ViewStudents />} />
+        <Route path="/company/ViewApplications" element={<ViewApplications />} />
+        <Route path="/admin/AdminViewApplications" element={<AdminViewApplications />} />
       </Routes>
     </Router>
   );

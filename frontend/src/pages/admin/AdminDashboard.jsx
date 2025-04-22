@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import "../../App.css";
 
-
 const AdminDashboard = () => {
   const [adminData, setAdminData] = useState(null);
   const [companies, setCompanies] = useState([]);
   const [students, setStudents] = useState([]);
-  
+  const [applications, setApplications] = useState([]); // State for applications
 
-  
   useEffect(() => {
     const storedAdmin = JSON.parse(localStorage.getItem("admin"));
     setAdminData(storedAdmin);
 
-    
+    // Example placeholders for fetching data (you can replace these with actual API calls)
+    // setCompanies(fetchedCompaniesData);
+    // setStudents(fetchedStudentsData);
+    // setApplications(fetchedApplicationsData);
   }, []);
 
   const handleLogout = () => {
@@ -56,36 +57,69 @@ const AdminDashboard = () => {
         </button>
       </div>
 
+      {/* Students Section */}
       <div className="dashboard-section">
-  <h2>Students</h2>
-  {students.length === 0 ? (
-    <p>No Students found.</p>
-  ) : (
-    <table className="dashboard-table">
-      <thead>
-        <tr>
-          <th>Student Name</th>
-          <th>Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        {students.map((student) => (
-          <tr key={student.id}>
-            <td>{student.name}</td>
-            <td>{student.email}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )}
-  <button
-    className="view-button"
-    onClick={() => (window.location.href = "/admin/ViewStudents")}
-  >
-    View & Manage Students
-  </button>
-</div>
+        <h2>Students</h2>
+        {students.length === 0 ? (
+          <p>No Students found.</p>
+        ) : (
+          <table className="dashboard-table">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student) => (
+                <tr key={student.id}>
+                  <td>{student.name}</td>
+                  <td>{student.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <button
+          className="view-button"
+          onClick={() => (window.location.href = "/admin/ViewStudents")}
+        >
+          View & Manage Students
+        </button>
+      </div>
 
+      {/* Applications Section */}
+      <div className="dashboard-section">
+        <h2>Applications</h2>
+        {applications.length === 0 ? (
+          <p>No Applications found.</p>
+        ) : (
+          <table className="dashboard-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Job</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {applications.map((application) => (
+                <tr key={application.id}>
+                  <td>{application.student.name}</td>
+                  <td>{application.job.title}</td>
+                  <td>{application.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <button
+          className="view-button"
+          onClick={() => (window.location.href = "/admin/AdminViewApplications")}
+        >
+          View & Manage Applications
+        </button>
+      </div>
 
       {/* Logout Button */}
       <div className="dashboard-actions">
@@ -93,10 +127,6 @@ const AdminDashboard = () => {
       </div>
     </div>
   );
- 
-
-    
-
-}
+};
 
 export default AdminDashboard;

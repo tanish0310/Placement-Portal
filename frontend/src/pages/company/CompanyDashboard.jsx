@@ -74,10 +74,10 @@ const CompanyDashboard = () => {
         </button> */}
         <button
           onClick={() =>
-            (window.location.href = "/company/update-job-criteria")
+            (window.location.href = "/company/ViewApplications")
           }
         >
-          Update Job Criteria
+          View Job Applications
         </button>
         <button onClick={handleLogout}>Logout</button>
       </div>

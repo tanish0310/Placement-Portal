@@ -114,5 +114,14 @@ export const deleteStudent = async (id) => {
   }
 };
 
-export default { fetchStudents, deleteStudent };
 
+
+export const fetchJobApplications = async () => {
+  try {
+    const response = await axios.get('applications/'); // Adjust base URL as needed
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching job applications:", error);
+    throw error;
+  }
+};

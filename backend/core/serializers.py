@@ -10,6 +10,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = [
+            'id',
             'name',
             'email',
             'password',
@@ -91,3 +92,17 @@ class JobApplicationSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+
+# ---------------------------------view applications-------------------------------
+class ApplicationSerializer(serializers.ModelSerializer):
+    job_title = serializers.CharField(source='job.title', read_only=True)
+    company_name = serializers.CharField(source='job.company.name', read_only=True)  # Assuming Job has a FK to Company
+    student_name = serializers.CharField(source='student.name', read_only=True)  # Add student_name field for clarity
+
+    class Meta:
+        model = JobApplication
+        fields = [
+            'id', 'student', 'job', 'job_title', 'company_name', 'student_name',  # Add student_name to fields
+            'resume', 'preferred_location', 'applied_at', 'status'
+        ]
+        read_only_fields = ['id', 'applied_at', 'student', 'status']  # Make status read-only if it's being updated manually

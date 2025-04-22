@@ -1,0 +1,22 @@
+/* ViewApplications.css */
+.view-applications-container {
+    padding: 20px;
+  }
+  
+  .applications-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .applications-table th,
+  .applications-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .applications-table th {
+    background-color: #f2f2f2;
+  }
+  
