@@ -3,22 +3,23 @@
       linear-gradient(135deg, rgba(230, 240, 250, 0.9), rgba(245, 247, 250, 0.9)),
       url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShBCaKTdbstjZRDHlmGxI1lQL4GcfHdBRLpg&s") no-repeat center center/cover;
     background-attachment: fixed;
-    background-color: #e6f0fa;
-
+    background-color: #395181;
     min-height: 100vh;
     width: 100vw;
     padding: 2.5rem;
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow-x: hidden;
+    z-index: 0;
 }
 
 .dashboard-container {
+    z-index:1;
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
     max-width: 1200px;
     margin: auto;
-    background: #ffffff67;
+    background: #161515e1;
     border-radius: 20px;
     padding: 2.5rem;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
@@ -29,25 +30,25 @@
     transform: translateY(-5px);
 }
 
-h1 {
+.dashboard-container h1 {
     width: 100%;
     text-align: center;
-    color: #000000;
+    color: #d2d2d2;
     margin-bottom: 2rem;
     font-size: 2.2rem;
     font-weight: 700;
     letter-spacing: 0.5px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.leftside{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left:0px;
 }
 
-.leftside,
-.rightside {
-    flex: 1;
-    min-width: 300px;
-}
-
-.leftside {
-    margin-top: 2rem;
-}
 
 /* Profile Section */
 .profile-section {
@@ -57,6 +58,9 @@ h1 {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
     padding: 2rem;
+    margin-left:200px;
+    min-width:30rem;
+
 }
 
 .profile-section:hover {
@@ -65,97 +69,14 @@ h1 {
 
 .profile-section h2 {
     margin-bottom: 1rem;
-    color: #fff7d4;
+    color: #020202;
     font-size: 1.8rem;
     font-weight: 600;
 }
 
 .profile-section p {
     margin: 0.5rem 0;
-    color: #f3f3f3;
-    font-size: 1rem;
-}
-
-/* Job Listings */
-.jobs-section,
-.applied-jobs-section {
-    background: #f9fbfd;
-    padding: 2rem;
-    border-radius: 16px;
-    margin-bottom: 2rem;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
-}
-
-.jobs-section:hover,
-.applied-jobs-section:hover {
-    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
-}
-
-.jobs-section h2,
-.applied-jobs-section h2 {
-    margin-bottom: 1.2rem;
-    color: black;
-    font-size: 1.6rem;
-    font-weight: 600;
-}
-
-.job-list,
-.applied-job-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.job-card {
-    background: #ffffff;
-    margin-bottom: 1rem;
-    padding: 1.2rem;
-    border-radius: 10px;
-    border-left: 6px solid #4a90e2;
-    transition: all 0.3s ease;
-}
-
-.job-card:hover {
-    background: #f0f6ff;
-    transform: translateX(5px);
-}
-
-.job-card h3 {
-    margin: 0;
-    color: #1a3c5e;
-    font-size: 1.3rem;
-    font-weight: 500;
-}
-
-.job-card p {
-    margin: 0.4rem 0;
-    color: #5a6a7a;
-    font-size: 0.95rem;
-}
-
-.job-card button {
-    margin-top: 0.7rem;
-    padding: 0.6rem 1.2rem;
-    background: linear-gradient(90deg, #4a90e2 0%, #357abd 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.job-card button:hover {
-    background: linear-gradient(90deg, #357abd 0%, #2a5f9a 100%);
-    transform: translateY(-2px);
-}
-
-/* Applied Jobs */
-.applied-job-list li {
-    padding: 0.7rem 0;
-    border-bottom: 1px solid #e8ecef;
-    color: #1a3c5e;
+    color: #2c2929;
     font-size: 1rem;
 }
 

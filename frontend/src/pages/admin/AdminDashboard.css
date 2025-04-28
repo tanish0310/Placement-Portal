@@ -1,0 +1,249 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    background: #1a1a1a;
+    min-height: 100vh;
+    width: 100vw;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+  
+  .dashboard-container {
+    max-width: 1200px;
+    margin: 2.5rem auto;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  .dashboard-container:hover {
+    transform: translateY(-5px);
+  }
+  
+  .dashboard-container h1 {
+    width: 100%;
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+  
+  .dashboard-section {
+    background: rgba(42, 42, 42, 0.7);
+    padding: 2rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+  }
+  
+  .dashboard-section:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+  }
+  
+  .dashboard-section h2 {
+    margin-bottom: 1.2rem;
+    color: #ffffff;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+  
+  .dashboard-section p {
+    color: #e0e0e0;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e0e0e0;
+  }
+  
+  .dashboard-table thead {
+    background: rgba(74, 74, 74, 0.7);
+  }
+  
+  .dashboard-table th {
+    padding: 0.8rem;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(232, 236, 239, 0.2);
+  }
+  
+  .dashboard-table td {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+    color: #d1d5db;
+    border-bottom: 1px solid rgba(232, 236, 239, 0.2);
+  }
+  
+  .dashboard-table tbody tr:hover {
+    background: rgba(100, 100, 100, 0.7);
+  }
+  
+  .view-button {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(90deg, #f87171, #fb923c);
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  .view-button:hover {
+    background: linear-gradient(90deg, #fb923c, #f87171);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(248, 113, 113, 0.3);
+  }
+  
+  .dashboard-actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem 0;
+  }
+  
+  .dashboard-actions button {
+    background: linear-gradient(90deg, #f87171, #fb923c);
+    color: #ffffff;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    min-width: 12rem;
+  }
+  
+  .dashboard-actions button:hover {
+    background: linear-gradient(90deg, #fb923c, #f87171);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(248, 113, 113, 0.3);
+  }
+  
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media screen and (max-width: 768px) {
+    body {
+      padding: 1.5rem;
+    }
+  
+    .dashboard-container {
+      padding: 1.5rem;
+      border-radius: 14px;
+      margin: 1.5rem auto;
+    }
+  
+    .dashboard-container h1 {
+      font-size: 1.8rem;
+    }
+  
+    .dashboard-section {
+      padding: 1.5rem;
+    }
+  
+    .dashboard-section h2 {
+      font-size: 1.4rem;
+    }
+  
+    .dashboard-table th,
+    .dashboard-table td {
+      padding: 0.6rem;
+      font-size: 0.9rem;
+    }
+  
+    .view-button {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+  
+    .dashboard-actions {
+      flex-direction: column;
+      padding: 1.5rem 0;
+    }
+  
+    .dashboard-actions button {
+      width: 90%;
+      padding: 0.7rem 1.2rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    body {
+      padding: 1rem;
+    }
+  
+    .dashboard-container {
+      padding: 1rem;
+      max-width: 90%;
+      margin: 1rem auto;
+    }
+  
+    .dashboard-container h1 {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+  
+    .dashboard-section {
+      padding: 1.25rem;
+    }
+  
+    .dashboard-section h2 {
+      font-size: 1.3rem;
+    }
+  
+    .dashboard-table th,
+    .dashboard-table td {
+      padding: 0.5rem;
+      font-size: 0.85rem;
+    }
+  
+    .view-button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+    }
+  
+    .dashboard-actions button {
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+    }
+  }

@@ -1,17 +1,19 @@
 .dashboard-container {
   padding: 40px;
-  width: 900vw;
+  width: 100vw;
+  height:100vh;
   margin: auto;
   font-family: sans-serif;
 }
 
-.profile-section, .jobs-section, .applied-jobs-section {
+.profile-section {
   background: #f5f9ff;
   color: red;
   padding: 20px;
   margin: 20px 0;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-left:315px;
 }
 
 .job-card {

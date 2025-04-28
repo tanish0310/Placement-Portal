@@ -83,36 +83,7 @@ const StudentDashboard = () => {
         </div>
 
         {/* Job Listings */}
-        <div className="rightside">
-          {/* Applied Jobs */}
-          <section className="applied-jobs-section">
-            <h2>Jobs You've Applied To</h2>
-            {appliedJobs.length === 0 ? (
-              <p>You haven't applied to any jobs yet.</p>
-            ) : (
-              <ul className="applied-job-list">
-                {appliedJobs.map((job) => (
-                  <li key={job.id} className="applied-job-item">
-                    <div className="job-details">
-                      <h4>
-                        {job.title} at {job.company_name}
-                      </h4>
-                      <p>
-                        Status:
-                        <span
-                          className={`status-tag ${job.status.toLowerCase()}`}
-                        >
-                          {job.status}
-                        </span>
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        </div>
-
+        
         {/* Actions */}
         <div className="dashboard-actions">
           <button onClick={() => (window.location.href = "/student/ApplyJobs")}>

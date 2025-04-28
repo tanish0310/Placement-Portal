@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../App.css";
+import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const [adminData, setAdminData] = useState(null);

@@ -44,27 +44,6 @@ const CompanyDashboard = () => {
         </p>
       </div>
 
-      <div className="jobs-section">
-        <h2>Your Posted Jobs</h2>
-        {postedJobs.length === 0 ? (
-          <p>You haven't posted any jobs yet.</p>
-        ) : (
-          <ul>
-            {postedJobs.map((job) => (
-              <li key={job.id} className="job-card">
-                <h3>{job.title}</h3>
-                <p>
-                  <strong>Eligibility:</strong> {job.eligibility}
-                </p>
-                <p>
-                  <strong>Description:</strong> {job.description}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-
       <div className="dashboard-actions">
         <button onClick={() => (window.location.href = "/company/PostJob")}>
           Post a Job
