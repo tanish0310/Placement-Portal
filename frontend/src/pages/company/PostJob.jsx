@@ -57,14 +57,13 @@ const PostJob = () => {
     setError(null);
 
     try {
-      // Prepare job data with company ID
       const jobData = {
         ...jobDetails,
-        company: companyId, // Send company ID instead of name
-        salary: parseFloat(jobDetails.salary).toFixed(2), // Ensure proper decimal format
+        company: companyId, 
+        salary: parseFloat(jobDetails.salary).toFixed(2), 
       };
 
-      console.log("Submitting job data:", jobData); // Debug log
+      console.log("Submitting job data:", jobData); 
 
       await postJob(jobData);
       alert("Job posted successfully!");
@@ -122,7 +121,7 @@ const PostJob = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="salary">Salary (USD)*</label>
+            <label htmlFor="salary">Salary (INR)*</label>
             <input
               type="number"
               name="salary"

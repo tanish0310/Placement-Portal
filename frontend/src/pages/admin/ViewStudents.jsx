@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { fetchStudents, deleteStudent } from "../../api/user"; // Import the specific API functions
+import { fetchStudents, deleteStudent } from "../../api/user";
 import './ViewStudents.css';
 
 const ViewStudents = () => {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    // Fetch students when the component loads
     const fetchAllStudents = async () => {
       try {
-        const data = await fetchStudents(); // Directly use fetchStudents API
-        setStudents(data); // Assuming the API returns an array of students
+        const data = await fetchStudents(); // use fetchStudents API
+        setStudents(data); 
       } catch (error) {
         console.error("Error fetching students:", error);
       }
@@ -21,7 +20,7 @@ const ViewStudents = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteStudent(id); // Directly use deleteStudent API
+      await deleteStudent(id); // use deleteStudent API
       setStudents(students.filter((student) => student.id !== id));
       alert("Student deleted successfully!");
     } catch (error) {

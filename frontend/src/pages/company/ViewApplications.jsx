@@ -86,7 +86,7 @@ const ViewApplications = () => {
               <th>Preferred Location</th>
               <th>Resume</th>
               <th>Applied At</th>
-              <th>Actions</th>
+              {/* <th>Actions</th> */}
             </tr>
           </thead>
           <tbody>
@@ -105,8 +105,8 @@ const ViewApplications = () => {
                     </a>
                   </td>
                   <td>{new Date(app.applied_at).toLocaleString()}</td>
-                  <td>
-                    <button
+                  {/* <td> */}
+                    {/* <button
                       className="accept-btn"
                       onClick={() => handleDecision(app.id, "Accepted")}
                       disabled={app.status === "Accepted"}
@@ -119,8 +119,8 @@ const ViewApplications = () => {
                       disabled={app.status === "Rejected"}
                     >
                       Reject
-                    </button>
-                  </td>
+                    </button> */}
+                  {/* </td> */}
                 </tr>
               );
             })}

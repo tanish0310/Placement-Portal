@@ -5,21 +5,18 @@ const AdminDashboard = () => {
   const [adminData, setAdminData] = useState(null);
   const [companies, setCompanies] = useState([]);
   const [students, setStudents] = useState([]);
-  const [applications, setApplications] = useState([]); // State for applications
+  const [applications, setApplications] = useState([]); 
 
   useEffect(() => {
     const storedAdmin = JSON.parse(localStorage.getItem("admin"));
     setAdminData(storedAdmin);
 
-    // Example placeholders for fetching data (you can replace these with actual API calls)
-    // setCompanies(fetchedCompaniesData);
-    // setStudents(fetchedStudentsData);
-    // setApplications(fetchedApplicationsData);
+  
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("admin");
-    window.location.href = "/home";
+    window.location.href = "/";
   };
 
   return (

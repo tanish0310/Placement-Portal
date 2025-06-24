@@ -58,9 +58,9 @@ const Signup = () => {
 
       // After successful signup, navigate to the dashboard
       if (userType === "student") {
-        navigate("/student/StudentDashboard");
+        navigate("/Login");
       } else {
-        navigate("/company/CompanyDashboard");
+        navigate("/Login");
       }
     } catch (err) {
       console.error("Signup error:", err);

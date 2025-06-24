@@ -31,7 +31,7 @@ const AdminViewApplications = () => {
               <th>Job Title</th>
               <th>Preferred Location</th>
               <th>Applied At</th>
-              <th>Status</th>
+              {/* <th>Status</th> */}
               <th>Resume</th>
             </tr>
           </thead>
@@ -42,7 +42,7 @@ const AdminViewApplications = () => {
                 <td>{application.job}</td>
                 <td>{application.preferred_location || "N/A"}</td>
                 <td>{new Date(application.applied_at).toLocaleString()}</td>
-                <td>{application.status}</td>
+                {/* <td>{application.status}</td> */}
                 <td>
                   {application.resume ? (
                     <a href={application.resume} target="_blank" rel="noopener noreferrer">

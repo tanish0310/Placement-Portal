@@ -89,11 +89,6 @@ const StudentDashboard = () => {
           <button onClick={() => (window.location.href = "/student/ApplyJobs")}>
             Apply Job
           </button>
-          <button
-            onClick={() => (window.location.href = "/student/ChangePassword")}
-          >
-            Change Password
-          </button>
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
@@ -102,3 +97,6 @@ const StudentDashboard = () => {
 };
 
 export default StudentDashboard;
+{/* <button onClick={() => (window.location.href = "/student/ChangePassword")}>
+  Change Password
+</button>; */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchCompanies, deleteCompany } from "../../api/user"; // Import your API functions
+import { fetchCompanies, deleteCompany } from "../../api/user"; 
 import "./ViewCompany.css";
 const ViewCompany = () => {
   const [companies, setCompanies] = useState([]);

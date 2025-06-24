@@ -125,6 +125,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4"
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.1.10"
   }
 }
