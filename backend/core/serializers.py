@@ -7,32 +7,43 @@ from .models import Student, Company, Job
 # Student Serializer
 # -----------------------------
 class StudentSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
+    
     class Meta:
         model = Student
         fields = [
             'id',
             'name',
             'email',
-            'password',
+            'password',  # Add this
             'cgpa',
             'branch',
             'year',
+            'profile_pic',
             'created_at',
-            # 'profile_pic',  # Uncomment if profile_pic is used
         ]
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
 # -----------------------------
 # Company Serializer
 # -----------------------------
 class CompanySerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
+    
     class Meta:
         model = Company
         fields = [
             'id',
             'name',
             'email',
+            'password',  # Add this
             'created_at',
         ]
+        extra_kwargs = {
+            'password': {'write_only': True}  # This ensures password is never returned in responses
+        }
 
 # -----------------------------
 # Job Serializer

@@ -7,13 +7,15 @@ import datetime
 class Student(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    password = models.CharField(max_length=128)  # Password stored as hashed in DB
+    password = models.CharField(max_length=128)
     cgpa = models.FloatField()
     branch = models.CharField(max_length=50)
     year = models.IntegerField()
-    profile_pic = models.ImageField(upload_to='profile_pics/')
+    profile_pic = models.ImageField(upload_to='profile_pics/', null=True, blank=True)  # Add null=True, blank=True
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.name
     
 
     def __str__(self):
@@ -80,7 +82,7 @@ class JobApplication(models.Model):
  
 class AdminOTP(models.Model):
     email = models.EmailField()
-    otp = models.CharField(max_length=6)
+    otp = models.CharField(max_length=5)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def is_expired(self):
@@ -94,7 +96,7 @@ import random
 
 class PasswordResetOTP(models.Model):
     email = models.EmailField()
-    otp = models.CharField(max_length=6)
+    otp = models.CharField(max_length=5)
     created_at = models.DateTimeField(default=timezone.now)
 
     def is_valid(self):

@@ -17,6 +17,7 @@ from rest_framework import status
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import check_password, make_password
 
+
 from .models import Student, Company, Job, AdminOTP
 from .serializers import (
     LoginSerializer,
@@ -54,8 +55,14 @@ def student_login(request):
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
 
+        print(f"DEBUG - Login attempt for: {email}")  # Add this
+
         try:
             student = Student.objects.get(email=email)
+            print(f"DEBUG - Student found: {student.name}")  # Add this
+            print(f"DEBUG - Stored password: {student.password[:20]}...")  # Add this
+            print(f"DEBUG - Password check result: {check_password(password, student.password)}")  # Add this
+            
             if check_password(password, student.password):
                 student_data = StudentSerializer(student).data
                 return Response(student_data, status=status.HTTP_200_OK)
@@ -71,19 +78,36 @@ def student_login(request):
 
 @api_view(['POST'])
 def company_signup(request):
+    print("=" * 50)
+    print("DEBUG - Request data:", request.data)
+    print("DEBUG - Name:", request.data.get('name'))
+    print("DEBUG - Email:", request.data.get('email'))
+    print("DEBUG - Password (before hash):", request.data.get('password'))
+    print("=" * 50)
+    
+    password_raw = request.data.get('password')
+    password_hashed = make_password(password_raw) if password_raw else None
+    
+    print("DEBUG - Password (after hash):", password_hashed)
+    
     company_data = {
         'name': request.data.get('name'),
         'email': request.data.get('email'),
-        'password': make_password(request.data.get('password')),
+        'password': password_hashed,
     }
 
+    print("DEBUG - Company data being serialized:", company_data)
+    
     serializer = CompanySerializer(data=company_data)
 
     if serializer.is_valid():
-        serializer.save()
+        print("DEBUG - Serializer valid, saving...")
+        saved_company = serializer.save()
+        print("DEBUG - Saved company password:", saved_company.password)
         return Response({"message": "Company registered successfully"}, status=status.HTTP_201_CREATED)
+    
+    print("DEBUG - Serializer errors:", serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['POST'])
 def company_login(request):
@@ -272,7 +296,7 @@ def send_otp(request):
         data = json.loads(request.body)
         email = data.get('email')
 
-        otp = ''.join(random.choices(string.digits, k=6))
+        otp = ''.join(random.choices(string.digits, k=5))
         PasswordResetOTP.objects.create(email=email, otp=otp)
 
         # Send OTP via email
@@ -295,6 +319,11 @@ def reset_password(request):
         otp = data.get('otp')
         new_password = data.get('new_password')
 
+        print(f"DEBUG RESET - Email: {email}")  # Add this
+        print(f"DEBUG RESET - OTP: {otp}")  # Add this
+        print(f"DEBUG RESET - New password: '{new_password}'")  # Add this
+        print(f"DEBUG RESET - Password length: {len(new_password) if new_password else 0}")  # Add this
+
         try:
             otp_record = PasswordResetOTP.objects.filter(email=email, otp=otp).latest('created_at')
             if not otp_record.is_valid():
@@ -302,11 +331,61 @@ def reset_password(request):
         except PasswordResetOTP.DoesNotExist:
             return JsonResponse({'error': 'Invalid OTP'}, status=400)
 
-        user = get_user_model().objects.get(email=email)
-        user.set_password(new_password)
-        user.save()
+        try:
+            student = Student.objects.get(email=email)
+            
+            # Hash and save
+            hashed = make_password(new_password)
+            print(f"DEBUG RESET - Hashed password: {hashed[:20]}...")  # Add this
+            
+            student.password = hashed
+            student.save()
+            
+            # Verify it saved
+            student.refresh_from_db()
+            print(f"DEBUG RESET - Saved password: {student.password[:20]}...")  # Add this
+            print(f"DEBUG RESET - Check password works: {check_password(new_password, student.password)}")  # Add this
+            
+            otp_record.delete()
+            
+            return JsonResponse({'message': 'Password reset successful'}, status=200)
+        except Student.DoesNotExist:
+            return JsonResponse({'error': 'Student not found'}, status=404)
+    
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
 
-        return JsonResponse({'message': 'Password reset successful'})
+@api_view(['PUT'])
+def update_student_profile(request):
+    email = request.data.get('email')
+    
+    if not email:
+        return Response({"detail": "Email is required"}, status=400)
+    
+    try:
+        student = Student.objects.get(email=email)
+        
+        # Update fields if provided
+        if request.data.get('name'):
+            student.name = request.data.get('name')
+        if request.data.get('cgpa'):
+            student.cgpa = request.data.get('cgpa')
+        if request.data.get('branch'):
+            student.branch = request.data.get('branch')
+        if request.data.get('year'):
+            student.year = request.data.get('year')
+        if request.FILES.get('profile_pic'):
+            student.profile_pic = request.FILES.get('profile_pic')
+        
+        student.save()
+        
+        # Return updated student data
+        serializer = StudentSerializer(student)
+        return Response(serializer.data, status=200)
+        
+    except Student.DoesNotExist:
+        return Response({"detail": "Student not found"}, status=404)
+    except Exception as e:
+        return Response({"detail": str(e)}, status=500)
 
 
 # ------------------------------------------------------------------------------------
@@ -349,6 +428,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 @api_view(['GET'])
+
 def get_applications_by_company(request):
     email = request.GET.get('email')  # company email
 
@@ -367,6 +447,7 @@ def get_applications_by_company(request):
             resume_url = request.build_absolute_uri(f"{settings.MEDIA_URL}{resume_path}")
 
             data.append({
+                "id": app.id,  # ← ADD THIS
                 "student_name": app.student.name,
                 "student_email": app.student.email,
                 "student_cgpa": app.student.cgpa,
@@ -374,6 +455,7 @@ def get_applications_by_company(request):
                 "resume_url": resume_url,
                 "job_title": app.job.title,
                 "applied_at": app.applied_at,
+                "status": app.status,  # ← ADD THIS
             })
 
         return Response(data, status=200)
@@ -408,6 +490,36 @@ class StudentAppliedJobsView(APIView):
         applications = JobApplication.objects.filter(student_id=student_id)
         serializer = JobApplicationSerializer(applications, many=True)
         return Response(serializer.data)
+    
+@api_view(['GET'])
+def get_student_applications(request):
+    email = request.GET.get('email')
+    
+    if not email:
+        return Response({"detail": "Email is required"}, status=400)
+    
+    try:
+        student = Student.objects.get(email=email)
+        applications = JobApplication.objects.filter(student=student).select_related('job', 'job__company')
+        
+        data = []
+        for app in applications:
+            data.append({
+                "id": app.id,
+                "job_title": app.job.title,
+                "company_name": app.job.company.name,
+                "location": app.job.location,
+                "salary": str(app.job.salary),
+                "applied_at": app.applied_at,
+                "status": app.status,
+                "resume_url": request.build_absolute_uri(app.resume.url) if app.resume else None,
+            })
+        
+        return Response(data, status=200)
+    except Student.DoesNotExist:
+        return Response({"detail": "Student not found"}, status=404)
+    except Exception as e:
+        return Response({"detail": str(e)}, status=500)
 
 # For Company: Accept/Reject Applications
 class UpdateApplicationStatusView(APIView):
@@ -429,10 +541,14 @@ class JobApplicationListView(APIView):
         applications = JobApplication.objects.select_related('student', 'job').all()
         data = [
             {
-                "student": application.student.name,  # Manually adding student name
-                "job": application.job.title,        # Manually adding job title
+                "id": application.id,  # Add this
+                "student": application.student.name,
+                "job": application.job.title,
+                "company_name": application.job.company.name,  # Add this
                 "resume": application.resume.url if application.resume else None,
                 "applied_at": application.applied_at,
+                "status": application.status,  # Add this
+                "preferred_location": application.preferred_location,  # Add this if you want
             }
             for application in applications
         ]

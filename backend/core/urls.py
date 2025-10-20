@@ -1,3 +1,4 @@
+from core import views
 from django.urls import path
 from .views import (
     student_signup,
@@ -35,21 +36,26 @@ urlpatterns = [
     path('jobs/list/', JobListAPIView.as_view(), name='job-list'),
 
    # apply jobs
-path("student/apply-job/<int:job_id>/", apply_job, name="apply_job"),
+    path("student/apply-job/<int:job_id>/", apply_job, name="apply_job"),
 
 
 
-path('companies/', CompanyListView.as_view(), name='company-list'),
+    path('companies/', CompanyListView.as_view(), name='company-list'),
     path('companies/<int:pk>/', CompanyDeleteView.as_view(), name='company-delete'),
-   path('students/', StudentListView.as_view(), name='student-list'),
+    path('students/', StudentListView.as_view(), name='student-list'),
     path('students/<int:pk>/', StudentDeleteView.as_view(), name='student-delete'),
     path('send-otp/', send_otp, name='send_otp'),
     path('reset-password/', reset_password, name='reset_password'),
     path("company/view-applications/", get_applications_by_company, name='view-applications'),
     path('company/decide-application/', decide_application, name='decide_application'),
     path('student/applied-jobs', StudentAppliedJobsView.as_view(), name='student-applied-jobs'),
+    path('student/applications/', views.get_student_applications, name='student_applications'),
     path('company/update-application/<int:pk>', UpdateApplicationStatusView.as_view(), name='update-application'),
     path('applications/', JobApplicationListView.as_view(), name='job_applications'),
+    path('applications/<int:pk>/status/', views.UpdateApplicationStatusView.as_view(), name='update_application_status'),
+    path('password-reset/send-otp/', views.send_otp, name='password_reset_send_otp'),
+    path('password-reset/reset/', views.reset_password, name='password_reset'),
+    path('student/update-profile/', views.update_student_profile, name='update_student_profile'),
 
 ]
 if settings.DEBUG:

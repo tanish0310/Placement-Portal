@@ -59,9 +59,9 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'PlacementPortal',
+        'NAME': 'placement_portal',
         'USER': 'root',
-        'PASSWORD': 'aadi1234',
+        'PASSWORD': 'king2918',
         'HOST': 'localhost',
         'PORT': '3306',
     }
