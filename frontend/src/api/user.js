@@ -1,4 +1,4 @@
-import axios from "./axios"; // Make sure this is your configured axios instance
+/*import axios from "./axios"; // Make sure this is your configured axios instance
 
 // 🧑‍🎓 Student Signup
 export const signupStudent = async (formData) => {
@@ -124,4 +124,4 @@ export const fetchJobApplications = async () => {
     console.error("Error fetching job applications:", error);
     throw error;
   }
-};
+}; */
