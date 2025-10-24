@@ -147,7 +147,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = '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'
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
-EMAIL_TIMEOUT = 10
+EMAIL_TIMEOUT = 30
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 
 # Security settings for production
