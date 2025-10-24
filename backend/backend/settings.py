@@ -142,11 +142,13 @@ REST_FRAMEWORK = {
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'tanish.chowdhury0310@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'bthlupgxnipjsgsl')
+EMAIL_HOST_USER = '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'
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
+EMAIL_TIMEOUT = 10
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 
 # Security settings for production
 if not DEBUG:
