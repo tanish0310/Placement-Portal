@@ -145,8 +145,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'placementportal.help@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'yqjubmqndwcpmwms')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'tanish.chowdhury0310@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'bthlupgxnipjsgsl')
 
 # Security settings for production
 if not DEBUG:
