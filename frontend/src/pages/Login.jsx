@@ -218,7 +218,7 @@ const Login = () => {
             {userType.charAt(0).toUpperCase() + userType.slice(1)} Sign In
           </h1>
           <p className="text-slate-600 font-light">
-            OTP sent! Please check your spam folder if you don't see it in your inbox."
+            Enter your credentials to continue
           </p>
         </div>
 
