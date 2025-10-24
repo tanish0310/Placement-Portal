@@ -637,3 +637,29 @@ def view_applications(request):
     serializer = ApplicationSerializer(job_applications, many=True)
 
     return Response(serializer.data)
+
+
+# In views.py
+from django.http import JsonResponse
+import socket
+
+def test_sendgrid(request):
+    """Test SendGrid connectivity"""
+    try:
+        # Test DNS resolution
+        host = 'smtp.sendgrid.net'
+        ip = socket.gethostbyname(host)
+        
+        # Test connection
+        sock = socket.create_connection((host, 587), timeout=10)
+        sock.close()
+        
+        return JsonResponse({
+            "success": True, 
+            "message": f"Can connect to {host} ({ip})"
+        })
+    except Exception as e:
+        return JsonResponse({
+            "success": False, 
+            "error": str(e)
+        }, status=500)

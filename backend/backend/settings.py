@@ -149,6 +149,9 @@ EMAIL_HOST_USER = 'SG.nMqblvtqS3aXAghGv7ejEA.EdxBtPwessDGCaUz5sOl6jgZoayl2u4VzDf
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
 EMAIL_TIMEOUT = 30
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
+EMAIL_USE_LOCALTIME = False
+EMAIL_SSL_CERTFILE = None
+EMAIL_SSL_KEYFILE = None
 
 # Security settings for production
 if not DEBUG:
