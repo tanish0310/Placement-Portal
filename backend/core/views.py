@@ -194,6 +194,25 @@ class JobListAPIView(ListAPIView):
 
 
 # ----------------------------- ADMIN OTP SYSTEM ---------------------------- #
+from threading import Thread
+from django.core.mail import send_mail
+
+def send_email_async(subject, message, recipient_list):
+    """Send email in background thread to avoid blocking"""
+    def _send():
+        try:
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=recipient_list,
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Email sending failed: {e}")
+    
+    Thread(target=_send).start()
+
 
 @csrf_exempt
 def send_admin_otp(request):
@@ -206,14 +225,13 @@ def send_admin_otp(request):
     otp = str(random.randint(10000, 99999))
     AdminOTP.objects.create(email=email, otp=otp)
 
-    send_mail(
+    send_email_async(
         subject="Your Admin OTP",
         message=f"Your OTP is: {otp}",
-        from_email="noreply@placementportal.com",
-        recipient_list=[email],
+        recipient_list=[email]
     )
 
-    return JsonResponse({"detail": "OTP sent successfully"})
+    return JsonResponse({"message": "OTP sent successfully"})
 
 
 @csrf_exempt
