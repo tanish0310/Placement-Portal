@@ -197,19 +197,42 @@ class JobListAPIView(ListAPIView):
 from threading import Thread
 from django.core.mail import send_mail
 
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from threading import Thread
+import os
+import logging
+
+logger = logging.getLogger(__name__)
+
 def send_email_async(subject, message, recipient_list):
-    """Send email in background thread to avoid blocking"""
+    """Send email using SendGrid HTTP API (more reliable than SMTP)"""
     def _send():
         try:
-            send_mail(
-                subject=subject,
-                message=message,
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=recipient_list,
-                fail_silently=False,
-            )
+            logger.info(f"Sending email via SendGrid API to: {recipient_list}")
+            
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            
+            for recipient in recipient_list:
+                mail = Mail(
+                    from_email=os.environ.get('EMAIL_HOST_USER'),
+                    to_emails=recipient,
+                    subject=subject,
+                    plain_text_content=message
+                )
+                
+                response = sg.send(mail)
+                logger.info(f"SendGrid response: {response.status_code}")
+                
+                if response.status_code in [200, 201, 202]:
+                    logger.info(f"Email sent successfully to {recipient}")
+                else:
+                    logger.error(f"SendGrid returned status: {response.status_code}")
+                    
         except Exception as e:
-            print(f"Email sending failed: {e}")
+            logger.error(f"SendGrid API failed: {type(e).__name__}: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
     
     Thread(target=_send).start()
 
