@@ -53,3 +53,5 @@ Thumbs.db
 /staticfiles/
 /media/
 
+.env
+.env.production

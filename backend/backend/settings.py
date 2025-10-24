@@ -150,9 +150,18 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'yqjubmqndwcpmwms')
 
 # Security settings for production
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    # Trust Railway's proxy headers
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
+    # Be careful with SSL redirect - can cause loops
+    # Only enable if Railway is properly configured
+    SECURE_SSL_REDIRECT = False  # Set to False initially to avoid redirect loops
+    
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'  # Important for cross-origin requests
+    CSRF_COOKIE_SAMESITE = 'None'
+    
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
