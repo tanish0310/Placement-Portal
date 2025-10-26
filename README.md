@@ -171,7 +171,7 @@ placement-portal/
 │   │   ├── views.py         # API views
 │   │   ├── serializers.py   # DRF serializers
 │   │   └── urls.py          # URL routing
-│   ├── placement_portal/    # Project settings
+│   ├── backend/    # Project settings
 │   │   ├── settings.py
 │   │   ├── urls.py
 │   │   └── wsgi.py
