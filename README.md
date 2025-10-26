@@ -34,7 +34,7 @@ A comprehensive web-based placement management system designed for educational i
 ### Backend
 - **Django**: Python web framework
 - **Django REST Framework**: API development
-- **PostgreSQL**: Database
+- **MySQL**: Database
 - **Gunicorn**: WSGI HTTP Server
 
 ### Third-Party Services
