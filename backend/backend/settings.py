@@ -20,18 +20,22 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # Application definition
 INSTALLED_APPS = [
-    'rest_framework',
+    # Django core apps FIRST
     'django.contrib.admin',
-    'cloudinary_storage',
-    'cloudinary',
-    'core',
-    'corsheaders',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # Third-party apps
+    'rest_framework',
+    'corsheaders',
+    'cloudinary_storage',  # Before cloudinary
+    'cloudinary',
+    
+    # Your apps LAST
+    'core',
 ]
 
 MIDDLEWARE = [
