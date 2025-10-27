@@ -55,7 +55,7 @@ class Job(models.Model):
 # ----------------------------APPLICATIONS TABLE-----------------------------------------------#
 
 from django.db import models
-from cloudinary_storage.storage import RawMediaCloudinaryStorage
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 class JobApplication(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -64,7 +64,7 @@ class JobApplication(models.Model):
         upload_to='resumes/', 
         null=True, 
         blank=True,
-        storage=RawMediaCloudinaryStorage()  # Add this line
+        storage=MediaCloudinaryStorage()  # Add this line
     )
     preferred_location = models.CharField(max_length=100, null=True, blank=True)
     applied_at = models.DateTimeField(auto_now_add=True)
