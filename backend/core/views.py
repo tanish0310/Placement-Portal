@@ -469,7 +469,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 @api_view(['GET'])
-
 def get_applications_by_company(request):
     email = request.GET.get('email')  # company email
 
@@ -480,15 +479,11 @@ def get_applications_by_company(request):
 
         data = []
         for app in applications:
-            # Check if the resume URL contains '/media/' and remove it if present
-            resume_path = app.resume.url
-            if resume_path.startswith('/media/'):
-                resume_path = resume_path[7:]  # Remove '/media/' from the start
-
-            resume_url = request.build_absolute_uri(f"{settings.MEDIA_URL}{resume_path}")
+            # Just use the URL directly - Cloudinary returns full URLs
+            resume_url = app.resume.url if app.resume else None
 
             data.append({
-                "id": app.id,  # ← ADD THIS
+                "id": app.id,
                 "student_name": app.student.name,
                 "student_email": app.student.email,
                 "student_cgpa": app.student.cgpa,
@@ -496,7 +491,7 @@ def get_applications_by_company(request):
                 "resume_url": resume_url,
                 "job_title": app.job.title,
                 "applied_at": app.applied_at,
-                "status": app.status,  # ← ADD THIS
+                "status": app.status,
             })
 
         return Response(data, status=200)
@@ -505,6 +500,8 @@ def get_applications_by_company(request):
         return Response({"detail": "Company not found."}, status=404)
     except Exception as e:
         return Response({"detail": str(e)}, status=500)
+
+
 
 
 
@@ -568,7 +565,7 @@ def get_student_applications(request):
                 "salary": str(app.job.salary),
                 "applied_at": app.applied_at,
                 "status": app.status,
-                "resume_url": request.build_absolute_uri(app.resume.url) if app.resume else None,
+                "resume_url": app.resume.url if app.resume else None,
             })
         
         return Response(data, status=200)
