@@ -524,6 +524,21 @@ from rest_framework import status
 from .models import JobApplication, Student
 from .serializers import JobApplicationSerializer
 
+from django.http import JsonResponse
+from django.conf import settings
+import os
+
+def debug_cloudinary(request):
+    """Debug endpoint to check Cloudinary configuration"""
+    return JsonResponse({
+        'cloudinary_cloud_name': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'cloudinary_api_key_exists': bool(os.environ.get('CLOUDINARY_API_KEY')),
+        'cloudinary_api_secret_exists': bool(os.environ.get('CLOUDINARY_API_SECRET')),
+        'default_file_storage': settings.DEFAULT_FILE_STORAGE,
+        'cloudinary_in_installed_apps': 'cloudinary' in settings.INSTALLED_APPS,
+        'cloudinary_storage_in_installed_apps': 'cloudinary_storage' in settings.INSTALLED_APPS,
+    })
+
 # For Student: View own applications
 class StudentAppliedJobsView(APIView):
     def get(self, request):

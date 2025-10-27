@@ -110,22 +110,19 @@ CLOUDINARY_STORAGE = {
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# After your Cloudinary configuration
-import logging
-logger = logging.getLogger(__name__)
-
-logger.info(f"CLOUDINARY_CLOUD_NAME: {os.environ.get('CLOUDINARY_CLOUD_NAME')}")
-logger.info(f"CLOUDINARY_API_KEY: {os.environ.get('CLOUDINARY_API_KEY')[:10]}...")  # First 10 chars only
-logger.info(f"DEFAULT_FILE_STORAGE: {DEFAULT_FILE_STORAGE}")
-
-# Debug Cloudinary Configuration
-import logging
-logger = logging.getLogger(__name__)
-
-logger.info(f"CLOUDINARY_CLOUD_NAME: {os.environ.get('CLOUDINARY_CLOUD_NAME')}")
-logger.info(f"CLOUDINARY_API_KEY exists: {bool(os.environ.get('CLOUDINARY_API_KEY'))}")
-logger.info(f"DEFAULT_FILE_STORAGE: {DEFAULT_FILE_STORAGE}")
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
 # Debug Cloudinary Configuration
 import logging
 logger = logging.getLogger(__name__)
