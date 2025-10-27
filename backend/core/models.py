@@ -55,12 +55,18 @@ class Job(models.Model):
 # ----------------------------APPLICATIONS TABLE-----------------------------------------------#
 
 from django.db import models
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 class JobApplication(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    resume = models.FileField(upload_to='resumes/', null=True, blank=True)
-    preferred_location = models.CharField(max_length=100, null=True, blank=True)  # Make this nullable
+    resume = models.FileField(
+        upload_to='resumes/', 
+        null=True, 
+        blank=True,
+        storage=RawMediaCloudinaryStorage()  # Add this line
+    )
+    preferred_location = models.CharField(max_length=100, null=True, blank=True)
     applied_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=20,
@@ -73,7 +79,7 @@ class JobApplication(models.Model):
     )
 
     def __str__(self):
-        return f"{self.student.name} - {self.job.title} - {self.status}"  # Accessing related fields
+        return f"{self.student.name} - {self.job.title} - {self.status}"
 
 
 
