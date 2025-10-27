@@ -12,6 +12,7 @@ from .views import (
     apply_job,
     decide_application,
     send_otp,reset_password,
+    debug_cloudinary,
 
     get_applications_by_company,
     UpdateApplicationStatusView,
@@ -56,7 +57,7 @@ urlpatterns = [
     path('password-reset/send-otp/', views.send_otp, name='password_reset_send_otp'),
     path('password-reset/reset/', views.reset_password, name='password_reset'),
     path('student/update-profile/', views.update_student_profile, name='update_student_profile'),
-    path('api/debug/cloudinary/', debug_cloudinary),
+    path('debug/cloudinary/', debug_cloudinary),
 
 ]
 if settings.DEBUG:
