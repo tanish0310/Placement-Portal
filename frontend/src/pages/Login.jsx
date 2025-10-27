@@ -261,7 +261,7 @@ const Login = () => {
               <>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Enter OTP
+                    Enter OTP. Please check you spam folder.
                   </label>
                   <input
                     type="text"
