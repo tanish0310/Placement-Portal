@@ -110,6 +110,21 @@ CLOUDINARY_STORAGE = {
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
+# After your Cloudinary configuration
+import logging
+logger = logging.getLogger(__name__)
+
+logger.info(f"CLOUDINARY_CLOUD_NAME: {os.environ.get('CLOUDINARY_CLOUD_NAME')}")
+logger.info(f"CLOUDINARY_API_KEY: {os.environ.get('CLOUDINARY_API_KEY')[:10]}...")  # First 10 chars only
+logger.info(f"DEFAULT_FILE_STORAGE: {DEFAULT_FILE_STORAGE}")
+
+# Test if cloudinary is actually loaded
+try:
+    import cloudinary
+    logger.info(f"Cloudinary imported successfully: {cloudinary.__version__}")
+except ImportError:
+    logger.error("Cloudinary not installed!")
+
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
