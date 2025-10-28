@@ -500,7 +500,7 @@ def get_applications_by_company(request):
         data = []
         for app in applications:
             # Just use the URL directly - Cloudinary returns full URLs
-            resume_url = app.resume.url if app.resume else None
+            resume_url = app.resume if app.resume else None  # It's already a URL now
 
             data.append({
                 "id": app.id,
@@ -585,7 +585,7 @@ def get_student_applications(request):
                 "salary": str(app.job.salary),
                 "applied_at": app.applied_at,
                 "status": app.status,
-                "resume_url": app.resume.url if app.resume else None,
+                "resume_url": app.resume if app.resume else None,  # It's already a URL now
             })
         
         return Response(data, status=200)
@@ -618,7 +618,7 @@ class JobApplicationListView(APIView):
                 "student": application.student.name,
                 "job": application.job.title,
                 "company_name": application.job.company.name,  # Add this
-                "resume": application.resume.url if application.resume else None,
+                "resume": application.resume if application.resume else None,  # It's already a URL now
                 "applied_at": application.applied_at,
                 "status": application.status,  # Add this
                 "preferred_location": application.preferred_location,  # Add this if you want
