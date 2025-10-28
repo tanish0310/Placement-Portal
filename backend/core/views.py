@@ -293,55 +293,35 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Job, JobApplication, Student
-import cloudinary
-import cloudinary.uploader
 
 @api_view(['POST'])
 def apply_job(request, job_id):
     try:
         email = request.POST.get('email')
-        resume_file = request.FILES.get('resume')
+        resume = request.FILES.get('resume')
 
-        if not email or not resume_file:
+        if not email or not resume:
             return Response({"detail": "Email and resume are required."}, status=400)
 
-        logger.info(f"Uploading resume: {resume_file.name}")
-        
-        # Upload to Cloudinary manually
-        upload_result = cloudinary.uploader.upload(
-            resume_file,
-            resource_type='auto',  # Let Cloudinary detect the type
-            folder='resumes',
-            use_filename=True,
-            unique_filename=True,
-            overwrite=False
-        )
-        
-        cloudinary_url = upload_result['secure_url']
-        logger.info(f"Uploaded to Cloudinary: {cloudinary_url}")
-        
+        # Fetch student manually
         student = Student.objects.get(email=email)
         job = Job.objects.get(id=job_id)
 
-        # Create application with Cloudinary URL
+        # Create JobApplication
         application = JobApplication.objects.create(
             job=job,
             student=student,
-            resume=cloudinary_url
+            resume=resume
         )
 
-        return Response({
-            "message": "Applied successfully.",
-            "resume_url": cloudinary_url
-        }, status=200)
+        return Response({"message": "Applied successfully."}, status=200)
 
+    except Student.DoesNotExist:
+        return Response({"detail": "Student not found."}, status=404)
+    except Job.DoesNotExist:
+        return Response({"detail": "Job not found."}, status=404)
     except Exception as e:
-        logger.error(f"Error: {str(e)}")
-        import traceback
-        logger.error(traceback.format_exc())
         return Response({"detail": str(e)}, status=500)
-
-
 
 # ----------------------------------------------change pwd--------------------------------------------------#
 from django.core.mail import send_mail
@@ -500,7 +480,7 @@ def get_applications_by_company(request):
         data = []
         for app in applications:
             # Just use the URL directly - Cloudinary returns full URLs
-            resume_url = app.resume if app.resume else None  # It's already a URL now
+            resume_url = app.resume.url if app.resume else None
 
             data.append({
                 "id": app.id,
@@ -585,7 +565,7 @@ def get_student_applications(request):
                 "salary": str(app.job.salary),
                 "applied_at": app.applied_at,
                 "status": app.status,
-                "resume_url": app.resume if app.resume else None,  # It's already a URL now
+                "resume_url": app.resume.url if app.resume else None,
             })
         
         return Response(data, status=200)
@@ -618,7 +598,7 @@ class JobApplicationListView(APIView):
                 "student": application.student.name,
                 "job": application.job.title,
                 "company_name": application.job.company.name,  # Add this
-                "resume": application.resume if application.resume else None,  # It's already a URL now
+                "resume": application.resume.url if application.resume else None,
                 "applied_at": application.applied_at,
                 "status": application.status,  # Add this
                 "preferred_location": application.preferred_location,  # Add this if you want
