@@ -57,15 +57,12 @@ class Job(models.Model):
 from django.db import models
 from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
+# core/models.py
+
 class JobApplication(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    resume = models.FileField(
-        upload_to='resumes/', 
-        null=True, 
-        blank=True,
-        storage=RawMediaCloudinaryStorage()  # Add this line
-    )
+    resume = models.URLField(max_length=500, null=True, blank=True)  # Change this line
     preferred_location = models.CharField(max_length=100, null=True, blank=True)
     applied_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
